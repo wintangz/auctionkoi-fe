@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function Home() {
@@ -51,6 +52,18 @@ export default function Home() {
         'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
     }
   ]
+
+  const [searchName, setSearchName] = useState('')
+  const [searchSex, setSearchSex] = useState('')
+  const [searchVariety, setSearchVariety] = useState('')
+
+  // Filtered koi list based on search input
+  const filteredKoiList = koiList.filter(
+    (koi) =>
+      (!searchName || koi.name.toLowerCase().includes(searchName.toLowerCase())) &&
+      (!searchSex || koi.sex.toLowerCase() === searchSex.toLowerCase()) &&
+      (!searchVariety || koi.variety.toLowerCase() === searchVariety.toLowerCase())
+  )
 
   return (
     <div className='min-h-screen bg-white flex flex-col justify-between'>
@@ -109,14 +122,24 @@ export default function Home() {
             <input
               type='text'
               placeholder='Search by name'
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
               className='w-full px-3 py-2 rounded border border-gray-300'
             />
-            <select className='w-full px-3 py-2 rounded border border-gray-300'>
+            <select
+              value={searchSex}
+              onChange={(e) => setSearchSex(e.target.value)}
+              className='w-full px-3 py-2 rounded border border-gray-300'
+            >
               <option value=''>Search by sex</option>
               <option value='male'>Male</option>
               <option value='female'>Female</option>
             </select>
-            <select className='w-full px-3 py-2 rounded border border-gray-300'>
+            <select
+              value={searchVariety}
+              onChange={(e) => setSearchVariety(e.target.value)}
+              className='w-full px-3 py-2 rounded border border-gray-300'
+            >
               <option value=''>Search by variety</option>
               <option value='kohaku'>Kohaku</option>
               <option value='sanke'>Sanke</option>
@@ -127,7 +150,7 @@ export default function Home() {
 
         <div className='mt-20'>
           <section className='grid md:grid-cols-2 gap-10'>
-            {koiList.map((koi) => (
+            {filteredKoiList.map((koi) => (
               <div key={koi.id} className='border rounded-lg overflow-hidden shadow-md flex p-5'>
                 <img src={koi.imageUrl} alt={`${koi.name} Koi fish`} className='w-1/4 h-auto object-cover' />
                 <div className='p-4 space-y-2 flex-1'>
@@ -144,18 +167,10 @@ export default function Home() {
                 </div>
               </div>
             ))}
+            {filteredKoiList.length === 0 && <p>No Koi found matching your search criteria.</p>}
           </section>
         </div>
       </main>
-
-      {/* Footer wave image (commented out in the original code) */}
-      {/* <div className='h-[210px]'>
-        <img
-          src='https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FWaveBG.png?alt=media&token=f6247cbd-ef51-4f6b-aa4b-95a353851bcb'
-          alt='Koi fish background'
-          className='w-full h-full object-cover object-bottom'
-        />
-      </div> */}
     </div>
   )
 }
