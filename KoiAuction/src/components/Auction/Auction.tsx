@@ -126,7 +126,6 @@ export default function Auction() {
     }
   ]
 
-  // Search
   const [searchName, setSearchName] = useState('')
   const [searchSex, setSearchSex] = useState('')
   const [searchVariety, setSearchVariety] = useState('')
@@ -138,7 +137,6 @@ export default function Auction() {
       (!searchVariety || koi.variety.toLowerCase() === searchVariety.toLowerCase())
   )
 
-  // Paging
   const [currentPage, setCurrentPage] = useState<number>(1)
   const koiPerPage = 4
   const totalPages = Math.ceil(filteredKoiList.length / koiPerPage)
