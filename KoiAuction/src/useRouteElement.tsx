@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import MainLayout from './layouts/MainLayout'
 import Auction from './components/Auction/Auction'
 import Blogs from './components/Blogs/Blogs'
+import AboutUs from './components/AboutUs/AboutUs'
 
 export default function useRouteElement() {
   const routeElements = useRoutes([
@@ -45,6 +46,14 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <Blogs />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/about',
+      element: (
+        <MainLayout>
+          <AboutUs />
         </MainLayout>
       )
     }
