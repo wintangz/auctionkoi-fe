@@ -5,6 +5,12 @@ export default {
     extend: {
       colors: {
         red: '#bf292d'
+      },
+      screens: {
+        'sm-md': '900px'
+      },
+      fontSize: {
+        xxs: '0.6rem'
       }
     }
   },
