@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Koi } from '../../types/Koi.type'
 
 export default function Home() {
-  const koiList = [
+  const koiList: Koi[] = [
     {
       id: 1,
       name: 'Asagi',
@@ -29,7 +30,7 @@ export default function Home() {
     },
     {
       id: 3,
-      name: 'Showa',
+      name: 'Sakura',
       code: '#Koi1211',
       sex: 'Male',
       reservePrice: '180,000 $',
@@ -41,7 +42,19 @@ export default function Home() {
     },
     {
       id: 4,
-      name: 'Showa',
+      name: 'Ameno',
+      code: '#Koi1211',
+      sex: 'Male',
+      reservePrice: '180,000 $',
+      age: 10,
+      variety: 'Kohaku',
+      timeLeft: '12h 20m 00s',
+      imageUrl:
+        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
+    },
+    {
+      id: 5,
+      name: 'Fujika',
       code: '#Koi1211',
       sex: 'Male',
       reservePrice: '180,000 $',
@@ -50,20 +63,111 @@ export default function Home() {
       timeLeft: '12h 20m 00s',
       imageUrl:
         'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
+    },
+    {
+      id: 6,
+      name: 'Haniki',
+      code: '#Koi1211',
+      sex: 'Male',
+      reservePrice: '180,000 $',
+      age: 10,
+      variety: 'Huji',
+      timeLeft: '12h 20m 00s',
+      imageUrl:
+        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
+    },
+    {
+      id: 7,
+      name: 'Asagi',
+      code: '#Koi1211',
+      sex: 'Male',
+      reservePrice: '180,000 $',
+      age: 10,
+      variety: 'Huji',
+      timeLeft: '12h 20m 00s',
+      imageUrl:
+        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
+    },
+    {
+      id: 8,
+      name: 'Asagi',
+      code: '#Koi1211',
+      sex: 'Male',
+      reservePrice: '180,000 $',
+      age: 10,
+      variety: 'Huji',
+      timeLeft: '12h 20m 00s',
+      imageUrl:
+        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
+    },
+    {
+      id: 9,
+      name: 'Benji',
+      code: '#Koi1211',
+      sex: 'Male',
+      reservePrice: '180,000 $',
+      age: 10,
+      variety: 'Huji',
+      timeLeft: '12h 20m 00s',
+      imageUrl:
+        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
+    },
+    {
+      id: 10,
+      name: 'Killua',
+      code: '#Koi1211',
+      sex: 'Male',
+      reservePrice: '180,000 $',
+      age: 10,
+      variety: 'Huji',
+      timeLeft: '12h 20m 00s',
+      imageUrl:
+        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
     }
   ]
 
+  // Search
   const [searchName, setSearchName] = useState('')
   const [searchSex, setSearchSex] = useState('')
   const [searchVariety, setSearchVariety] = useState('')
 
-  // Filtered koi list based on search input
   const filteredKoiList = koiList.filter(
     (koi) =>
       (!searchName || koi.name.toLowerCase().includes(searchName.toLowerCase())) &&
       (!searchSex || koi.sex.toLowerCase() === searchSex.toLowerCase()) &&
       (!searchVariety || koi.variety.toLowerCase() === searchVariety.toLowerCase())
   )
+
+  // Paging
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const koiPerPage = 4
+  const totalPages = Math.ceil(filteredKoiList.length / koiPerPage)
+
+  const indexOfLastKoi = currentPage * koiPerPage
+  const indexOfFirstKoi = indexOfLastKoi - koiPerPage
+  const currentKoi = filteredKoiList.slice(indexOfFirstKoi, indexOfLastKoi)
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber)
+  }
+
+  const generatePageNumbers = () => {
+    const pageNumbers = []
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i)
+      }
+    } else {
+      if (currentPage <= 3) {
+        pageNumbers.push(1, 2, 3, '...', totalPages)
+      } else if (currentPage > totalPages - 3) {
+        pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages)
+      } else {
+        pageNumbers.push(1, '...', currentPage, '...', totalPages)
+      }
+    }
+    return pageNumbers
+  }
 
   return (
     <div className='min-h-screen bg-white flex flex-col justify-between'>
@@ -90,14 +194,6 @@ export default function Home() {
             />
           </div>
         </section>
-
-        {/* <div className='h-[100px]'>
-          <img
-            src='https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FWaveBG.png?alt=media&token=f6247cbd-ef51-4f6b-aa4b-95a353851bcb'
-            alt='Koi fish background'
-            className='w-full h-full object-cover object-bottom'
-          />
-        </div> */}
 
         <section className='flex flex-col-reverse md:flex-row mt-20 md:items-center md:space-x-8 justify-between'>
           <div className='md:w-3/4 mt-4 md:mt-0 lg:w-1/3'>
@@ -142,33 +238,69 @@ export default function Home() {
             >
               <option value=''>Search by variety</option>
               <option value='kohaku'>Kohaku</option>
-              <option value='sanke'>Sanke</option>
               <option value='showa'>Showa</option>
             </select>
           </div>
         </section>
 
+        {/* Koi List Section */}
         <div className='mt-20'>
           <section className='grid md:grid-cols-2 gap-10'>
-            {filteredKoiList.map((koi) => (
-              <div key={koi.id} className='border rounded-lg overflow-hidden shadow-md flex p-5'>
-                <img src={koi.imageUrl} alt={`${koi.name} Koi fish`} className='w-1/4 h-auto object-cover' />
-                <div className='p-4 space-y-2 flex-1'>
-                  <p className='text-red font-medium'>Time Left: {koi.timeLeft}</p>
-                  <h3 className='text-xl font-bold'>Koi Name: {koi.name}</h3>
-                  <p>Code: {koi.code}</p>
-                  <p>Sex: {koi.sex}</p>
-                  <p>Reserve price: {koi.reservePrice}</p>
-                  <p>Age: {koi.age}</p>
-                  <p>Variety: {koi.variety}</p>
-                  <button className='mt-2 bg-red text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
-                    View
-                  </button>
+            {currentKoi.length > 0 ? (
+              currentKoi.map((koi) => (
+                <div key={koi.id} className='border rounded-lg overflow-hidden shadow-md flex p-5'>
+                  <img src={koi.imageUrl} alt={`${koi.name} Koi fish`} className='w-1/4 h-auto object-cover' />
+                  <div className='p-4 space-y-2 flex-1'>
+                    <p className='text-red font-medium'>Time Left: {koi.timeLeft}</p>
+                    <h3 className='text-xl font-bold'>Koi Name: {koi.name}</h3>
+                    <p>Code: {koi.code}</p>
+                    <p>Sex: {koi.sex}</p>
+                    <p>Reserve price: {koi.reservePrice}</p>
+                    <p>Age: {koi.age}</p>
+                    <p>Variety: {koi.variety}</p>
+                    <button className='mt-2 bg-red text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
+                      View
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-            {filteredKoiList.length === 0 && <p>No Koi found matching your search criteria.</p>}
+              ))
+            ) : (
+              <p>No Koi found matching your search criteria.</p>
+            )}
           </section>
+
+          <div className='flex justify-center mt-8 space-x-2'>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 border rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-white'}`}
+            >
+              &lt;
+            </button>
+
+            {generatePageNumbers().map((pageNumber, index) => (
+              <button
+                key={index}
+                onClick={() => handlePageChange(Number(pageNumber))}
+                disabled={typeof pageNumber !== 'number'}
+                className={`px-4 py-2 border rounded ${
+                  currentPage === pageNumber ? 'bg-red text-white' : 'bg-white text-black hover:bg-red hover:text-white'
+                }`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 border rounded ${
+                currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-white'
+              }`}
+            >
+              &gt;
+            </button>
+          </div>
         </div>
       </main>
     </div>
