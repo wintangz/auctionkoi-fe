@@ -14,31 +14,35 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
   }
 
   return (
-    <div className='flex justify-center space-x-2'>
+    <div className='flex justify-center mt-14 sm:mt-10 space-x-2'>
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className='px-3 py-1 border rounded bg-gray-200 disabled:opacity-50'
+        className={`px-4 py-2 border rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-white'}`}
       >
-        Previous
+        &lt;
       </button>
 
-      {pageNumbers.map((number) => (
+      {pageNumbers.map((pageNumber) => (
         <button
-          key={number}
-          onClick={() => onPageChange(number)}
-          className={`px-3 py-1 border rounded ${currentPage === number ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+          key={pageNumber} // Use pageNumber as the key instead of index for better performance
+          onClick={() => onPageChange(pageNumber)}
+          className={`px-4 py-2 border rounded ${
+            currentPage === pageNumber ? 'bg-red text-white' : 'bg-white text-black hover:bg-red hover:text-white'
+          }`}
         >
-          {number}
+          {pageNumber}
         </button>
       ))}
 
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className='px-3 py-1 border rounded bg-gray-200 disabled:opacity-50'
+        className={`px-4 py-2 border rounded ${
+          currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-white'
+        }`}
       >
-        Next
+        &gt;
       </button>
     </div>
   )
