@@ -18,7 +18,12 @@ export default function LoginPage() {
               <table className='w-full'>
                 <tbody>
                   <tr className='flex flex-col md:flex-row md:items-center'>
-                    <td className='text-sm font-medium text-gray-700 md:w-1/3'>Username:</td>
+                    <td
+                      className='text-sm font-medium text-gray-700 md:w-1/3 lg:mr-20 mr-0'
+                      style={{ textAlign: 'end' }}
+                    >
+                      Username:
+                    </td>
                     <td className='md:w-2/3'>
                       <input
                         type='text'
@@ -28,7 +33,12 @@ export default function LoginPage() {
                     </td>
                   </tr>
                   <tr className='flex flex-col md:flex-row md:items-center mt-4'>
-                    <td className='text-sm font-medium text-gray-700 md:w-1/3'>Password:</td>
+                    <td
+                      className='text-sm font-medium text-gray-700 md:w-1/3 lg:mr-20 mr-0'
+                      style={{ textAlign: 'end' }}
+                    >
+                      Password:
+                    </td>
                     <td className='md:w-2/3'>
                       <input
                         type='password'
