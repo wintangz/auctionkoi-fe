@@ -152,7 +152,7 @@ export default function Auction() {
   return (
     <>
       <div className='min-h-screen bg-white flex flex-col justify-between'>
-        <main className='container mx-auto lg:px-14 lg:py-20 py-0 space-y-12 px-10 lg:mt-0 mt-10'>
+        <main className='container mx-auto lg:px-14 lg:py-20 py-0 space-y-12 lg:mt-0 mt-10 px-5'>
           <section className='flex flex-col-reverse md:flex-row md:items-center md:space-x-8 justify-between'>
             <div className='md:w-3/4 mt-4 md:mt-0 lg:w-1/3'>
               <p className='text-gray-700'>
