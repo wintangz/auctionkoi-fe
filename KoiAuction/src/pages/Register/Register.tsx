@@ -3,21 +3,52 @@ import { Link } from 'react-router-dom'
 import { schema, Schema } from '../../utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Input from '../../components/Input/Input'
+import { useMutation } from '@tanstack/react-query'
+import { registerAccount } from '../../apis/Auth.api'
+import { FormRegister } from '../../types/FormRegister.type'
+import { omit } from 'lodash'
+import { isAxiosUnProcessableEntityError } from '../../utils/utils'
+import { ResponseApi } from '../../types/Utils.type'
 
 export default function Register() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm<Schema>({
     resolver: yupResolver(schema)
   })
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data)
+    const body = omit(data, ['confirmPassword'])
+    registerAccountMutation.mutate(body, {
+      onSuccess: (data) => {
+        console.log(data)
+      },
+      onError: (error) => {
+        if (isAxiosUnProcessableEntityError<ResponseApi<Omit<FormRegister, 'confirm_password'>>>(error)) {
+          const formError = error.response?.data.data
+          if (formError?.email) {
+            setError('email', {
+              message: formError.email,
+              type: 'Server'
+            })
+          }
+          if (formError?.password) {
+            setError('password', {
+              message: formError.password,
+              type: 'Server'
+            })
+          }
+        }
+      }
+    })
   })
 
-  console.log('error: ', errors)
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: Omit<FormRegister, 'confirmPassword'>) => registerAccount(body)
+  })
 
   return (
     <div className='min-h-screen bg-white flex flex-col justify-between'>
