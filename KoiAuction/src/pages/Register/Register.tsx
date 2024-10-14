@@ -27,7 +27,7 @@ export default function Register() {
         console.log(data)
       },
       onError: (error) => {
-        if (isAxiosUnProcessableEntityError<ResponseApi<Omit<FormRegister, 'confirm_password'>>>(error)) {
+        if (isAxiosUnProcessableEntityError<ResponseApi<Omit<FormRegister, 'confirmPassword'>>>(error)) {
           const formError = error.response?.data.data
           if (formError?.email) {
             setError('email', {

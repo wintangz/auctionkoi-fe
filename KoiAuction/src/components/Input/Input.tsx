@@ -1,17 +1,24 @@
-import { RegisterOptions, UseFormRegister } from 'react-hook-form'
-import { FormRegister } from '../../types/FormRegister.type'
+import { RegisterOptions, UseFormRegister, FieldValues, Path } from 'react-hook-form'
 
-interface Props {
+interface Props<T extends FieldValues> {
   type: React.HTMLInputTypeAttribute
   errorMessage?: string
   placeholder?: string
   className?: string
-  name: keyof FormRegister
-  register: UseFormRegister<FormRegister>
-  rules?: RegisterOptions<FormRegister>
+  name: Path<T>
+  register: UseFormRegister<T>
+  rules?: RegisterOptions<T>
 }
 
-export default function Input({ type, errorMessage, placeholder, className, name, register, rules }: Props) {
+export default function Input<T extends FieldValues>({
+  type,
+  errorMessage,
+  placeholder,
+  className,
+  name,
+  register,
+  rules
+}: Props<T>) {
   return (
     <div className={className}>
       <input

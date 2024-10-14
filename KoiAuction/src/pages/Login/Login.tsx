@@ -1,27 +1,54 @@
-import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { getRules } from '../../utils/rules'
-interface FormData {
-  email: string
-  password: string
-  confirmPassword: string
-}
+import { Link } from 'react-router-dom'
+import { loginSchema, Schema } from '../../utils/rules'
+import { yupResolver } from '@hookform/resolvers/yup'
+import Input from '../../components/Input/Input'
+import { useMutation } from '@tanstack/react-query'
+import { loginAccount } from '../../apis/Auth.api'
+import { FormRegister } from '../../types/FormRegister.type'
+import { isAxiosUnProcessableEntityError } from '../../utils/utils'
+import { ResponseApi } from '../../types/Utils.type'
 
-export default function LoginPage() {
+type FormData = Omit<Schema, 'confirmPassword'>
+
+export default function Login() {
   const {
     register,
     handleSubmit,
-    getValues,
+    setError,
     formState: { errors }
-  } = useForm<FormData>()
-
-  const rules = getRules(getValues)
-
-  const onSubmit = handleSubmit((data) => {
-    console.log(data)
+  } = useForm<FormData>({
+    resolver: yupResolver(loginSchema)
   })
 
-  console.log('error: ', errors)
+  const onSubmit = handleSubmit((data) => {
+    loginAccountMutation.mutate(data, {
+      onSuccess: (data) => {
+        console.log(data)
+      },
+      onError: (error) => {
+        if (isAxiosUnProcessableEntityError<ResponseApi<FormData>>(error)) {
+          const formError = error.response?.data.data
+          if (formError?.email) {
+            setError('email', {
+              message: formError.email,
+              type: 'Server'
+            })
+          }
+          if (formError?.password) {
+            setError('password', {
+              message: formError.password,
+              type: 'Server'
+            })
+          }
+        }
+      }
+    })
+  })
+
+  const loginAccountMutation = useMutation({
+    mutationFn: (body: Omit<FormRegister, 'confirmPassword'>) => loginAccount(body)
+  })
 
   return (
     <div className='min-h-screen bg-white flex flex-col justify-between'>
@@ -36,62 +63,52 @@ export default function LoginPage() {
               />
             </div>
             <div className='w-full lg:w-3/5'>
-              <h1 className='text-2xl font-semibold text-center mb-10'>Create Your New Account</h1>
+              <h1 className='text-2xl font-semibold text-center mb-10'>Welcome To Koi Auction</h1>
               <form onSubmit={onSubmit} noValidate>
                 <table className='w-full'>
                   <tbody>
                     <tr className='flex flex-col md:flex-row'>
-                      <td className='text-sm font-bold text-gray-700 md:w-1/4 mr-0 lg:pt-2 pt-0'>Username:</td>
+                      <td className='text-sm font-bold text-gray-700 md:w-1/4 mr-0 lg:pt-2 pt-0'>Email:</td>
                       <td className='md:w-2/3'>
-                        <input
+                        <Input
+                          name='email'
+                          register={register}
                           type='email'
-                          className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red'
+                          className=''
+                          errorMessage={errors.email?.message}
                           placeholder='Email'
-                          {...register('email', rules.email)}
                         />
-                        <div className='mt-1 text-red min-h-[1.25rem] text-sm'>{errors.email?.message}</div>
                       </td>
                     </tr>
                     <tr className='flex flex-col md:flex-row'>
                       <td className='text-sm font-bold text-gray-700 md:w-1/4 mr-0 lg:pt-2 pt-0'>Password:</td>
                       <td className='md:w-2/3'>
-                        <input
+                        <Input
+                          name='password'
+                          register={register}
                           type='password'
-                          className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red'
+                          className=''
+                          errorMessage={errors.password?.message}
                           placeholder='Password'
-                          {...register('password', rules.password)}
                         />
-                        <div className='mt-1 text-red min-h-[1.25rem] text-sm'>{errors.password?.message}</div>
-                      </td>
-                    </tr>
-                    <tr className='flex flex-col md:flex-row'>
-                      <td className='text-sm font-bold text-gray-700 md:w-1/4 mr-0 lg:pt-2 pt-0'>Confirm Password:</td>
-                      <td className='md:w-2/3'>
-                        <input
-                          type='password'
-                          className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red'
-                          placeholder='Re-enter Password'
-                          {...register('confirmPassword', rules.confirmPassword)}
-                        />
-                        <div className='mt-1 text-red min-h-[1.25rem] text-sm'>{errors.confirmPassword?.message}</div>
                       </td>
                     </tr>
                     <tr>
-                      <td colSpan={2} className='text-center'>
-                        <div className='flex justify-end items-end space-x-4 lg:px-12 md:px-14 px-0 mt-4 lg:mb-10 mb-5'>
-                          <button className='flex justify-end px-4 py-2 rounded-md text-sm font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red'>
-                            Sign Up with
+                      <td className='text-center'>
+                        <div className='flex justify-end items-end space-x-4 lg:px-14 md:px-14 px-0 mt-4 lg:mb-10 mb-5'>
+                          <button className='flex justify-end px-4 py-2 rounded-md text-sm font-medium text-gray-700 bg-white'>
+                            Login with
                             <img
                               src='https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/Icon%2FGoogleIcon.png?alt=media&token=cf52345a-64c4-4f27-b3ab-8eddf16079b4'
                               alt='Google logo'
-                              className='ml-2 lg:mr-44 mr-30 w-5 h-5'
+                              className='ml-2 w-5 h-5'
                             />
                           </button>
                           <button
                             type='submit'
-                            className='px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red hover:bg-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+                            className='px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red hover:bg-red'
                           >
-                            Sign Up
+                            Login
                           </button>
                         </div>
                       </td>
@@ -99,9 +116,9 @@ export default function LoginPage() {
                     <tr>
                       <td colSpan={2} className='text-center'>
                         <hr className='my-4 border-gray-300' />
-                        <span className='text-sm text-gray-600'>I already have an account</span>
-                        <Link to='/login' className='text-sm text-red hover:underline ml-2'>
-                          Login
+                        <span className='text-sm text-gray-600'>I don't have any account</span>
+                        <Link to='/register' className='text-sm font-bold text-red hover:underline ml-2'>
+                          Sign Up
                         </Link>
                       </td>
                     </tr>
