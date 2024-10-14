@@ -77,8 +77,7 @@ export const schema = yup.object({
     .oneOf([yup.ref('password')], 'Confirm Password không khớp Password')
 })
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const loginSchema = schema.omit(['confirmPassword'])
+export const loginSchema = schema.omit(['confirmPassword'])
 
 export type LoginSchema = yup.InferType<typeof loginSchema>
 
