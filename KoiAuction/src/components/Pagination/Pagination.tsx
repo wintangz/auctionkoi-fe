@@ -25,7 +25,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
 
       {pageNumbers.map((pageNumber) => (
         <button
-          key={pageNumber} // Use pageNumber as the key instead of index for better performance
+          key={pageNumber}
           onClick={() => onPageChange(pageNumber)}
           className={`px-4 py-2 border rounded ${
             currentPage === pageNumber ? 'bg-red text-white' : 'bg-white text-black hover:bg-red hover:text-white'
