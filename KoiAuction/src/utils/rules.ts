@@ -1,14 +1,10 @@
 import type { RegisterOptions, UseFormGetValues } from 'react-hook-form'
+import { FormRegister } from '../types/FormRegister.type'
+import * as yup from 'yup'
 
-type FormData = {
-  email: string
-  password: string
-  confirmPassword: string
-}
+type Rules = { [key in keyof FormRegister]?: RegisterOptions<FormRegister, key> }
 
-type Rules = { [key in keyof FormData]?: RegisterOptions<FormData, key> }
-
-export const getRules = (getValues?: UseFormGetValues<FormData>): Rules => ({
+export const getRules = (getValues?: UseFormGetValues<FormRegister>): Rules => ({
   email: {
     required: {
       value: true,
@@ -60,3 +56,30 @@ export const getRules = (getValues?: UseFormGetValues<FormData>): Rules => ({
         : undefined
   }
 })
+
+export const schema = yup.object({
+  email: yup
+    .string()
+    .required('Email là bắt buộc')
+    .email('Email không đúng định dạng')
+    .min(5, 'Độ dài ký tự từ 5 - 160')
+    .max(160, 'Độ dài ký tự từ 5 - 160'),
+  password: yup
+    .string()
+    .required('Password là bắt buộc')
+    .min(6, 'Độ dài ký tự từ 6 - 160')
+    .max(160, 'Độ dài ký tự từ 6 - 160'),
+  confirmPassword: yup
+    .string()
+    .required('Confirm Password là bắt buộc')
+    .min(6, 'Độ dài ký tự từ 6 - 160')
+    .max(160, 'Độ dài ký tự từ 6 - 160')
+    .oneOf([yup.ref('password')], 'Confirm Password không khớp Password')
+})
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const loginSchema = schema.omit(['confirmPassword'])
+
+export type LoginSchema = yup.InferType<typeof loginSchema>
+
+export type Schema = yup.InferType<typeof schema>

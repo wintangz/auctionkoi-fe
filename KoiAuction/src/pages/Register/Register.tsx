@@ -1,18 +1,17 @@
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { getRules } from '../../utils/rules'
+import { schema, Schema } from '../../utils/rules'
+import { yupResolver } from '@hookform/resolvers/yup'
 import Input from '../../components/Input/Input'
-import { FormRegister } from '../../types/FormRegister.type'
 
 export default function Register() {
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors }
-  } = useForm<FormRegister>()
-
-  const rules = getRules(getValues)
+  } = useForm<Schema>({
+    resolver: yupResolver(schema)
+  })
 
   const onSubmit = handleSubmit((data) => {
     console.log(data)
@@ -47,7 +46,6 @@ export default function Register() {
                           className=''
                           errorMessage={errors.email?.message}
                           placeholder='Email'
-                          rules={rules.email}
                         />
                       </td>
                     </tr>
@@ -61,7 +59,6 @@ export default function Register() {
                           className=''
                           errorMessage={errors.password?.message}
                           placeholder='Password'
-                          rules={rules.password}
                         />
                       </td>
                     </tr>
@@ -75,7 +72,6 @@ export default function Register() {
                           className=''
                           errorMessage={errors.confirmPassword?.message}
                           placeholder='Re-enter Password'
-                          rules={rules.confirmPassword}
                         />
                       </td>
                     </tr>
