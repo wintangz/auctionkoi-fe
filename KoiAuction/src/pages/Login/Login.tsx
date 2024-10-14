@@ -1,86 +1,113 @@
 import { Link } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { getRules } from '../../utils/rules'
+interface FormData {
+  email: string
+  password: string
+  confirmPassword: string
+}
 
 export default function LoginPage() {
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors }
+  } = useForm<FormData>()
+
+  const rules = getRules(getValues)
+
+  const onSubmit = handleSubmit((data) => {
+    console.log(data)
+  })
+
+  console.log('error: ', errors)
+
   return (
     <div className='min-h-screen bg-white flex flex-col justify-between'>
       <main className='container mx-auto lg:px-14 lg:py-20 py-0 space-y-12 lg:mt-0 mt-10 px-5 flex justify-center'>
-        <div className='w-full max-w-5xl bg-white rounded-lg'>
-          <div className='flex mb-6'>
-            <div className='hidden lg:w-1/3 lg:block'>
+        <div className='w-full max-w-6xl bg-white rounded-lg'>
+          <div className='flex flex-col lg:flex-row lg:mb-6 mb-0 justify-between'>
+            <div className='lg:w-1/3 w-full flex justify-center mb-6 lg:mb-0'>
               <img
-                src='https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/LoginLogout%2FKoiLogin.png?alt=media&token=2a7623dd-2b2f-4597-877d-8d1837eb021a' // Use a valid path for your image
+                src='https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/LoginLogout%2FKoiLogin.png?alt=media&token=2a7623dd-2b2f-4597-877d-8d1837eb021a'
                 alt='Koi fish illustration'
-                className='mx-auto w-full h-auto'
+                className='w-full h-auto max-w-xs lg:max-w-full'
               />
             </div>
-            <div className='w-full lg:w-3/5 pl-4'>
-              <h1 className='text-2xl font-semibold text-center mb-10'>Welcome to Koi Auction</h1>
-              <table className='w-full'>
-                <tbody>
-                  <tr className='flex flex-col md:flex-row md:items-center'>
-                    <td
-                      className='text-sm font-medium text-gray-700 md:w-1/3 lg:mr-20 mr-0'
-                      style={{ textAlign: 'end' }}
-                    >
-                      Username:
-                    </td>
-                    <td className='md:w-2/3'>
-                      <input
-                        type='text'
-                        id='username'
-                        className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500'
-                      />
-                    </td>
-                  </tr>
-                  <tr className='flex flex-col md:flex-row md:items-center mt-4'>
-                    <td
-                      className='text-sm font-medium text-gray-700 md:w-1/3 lg:mr-20 mr-0'
-                      style={{ textAlign: 'end' }}
-                    >
-                      Password:
-                    </td>
-                    <td className='md:w-2/3'>
-                      <input
-                        type='password'
-                        id='password'
-                        className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500'
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan={2} className='text-center'>
-                      <div className='flex justify-end items-end space-x-4 mt-4 lg:mb-10 mb-5'>
-                        <button
-                          type='button'
-                          className='flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
-                        >
-                          Login with
-                          <img
-                            src='https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/Icon%2FGoogleIcon.png?alt=media&token=cf52345a-64c4-4f27-b3ab-8eddf16079b4'
-                            alt='Google logo'
-                            className='ml-2 lg:mr-44 mr-32 w-5 h-5'
-                          />
-                        </button>
-                        <button
-                          type='submit'
-                          className='px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red hover:bg-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
-                        >
+            <div className='w-full lg:w-3/5'>
+              <h1 className='text-2xl font-semibold text-center mb-10'>Create Your New Account</h1>
+              <form onSubmit={onSubmit} noValidate>
+                <table className='w-full'>
+                  <tbody>
+                    <tr className='flex flex-col md:flex-row'>
+                      <td className='text-sm font-bold text-gray-700 md:w-1/4 mr-0 lg:pt-2 pt-0'>Username:</td>
+                      <td className='md:w-2/3'>
+                        <input
+                          type='email'
+                          className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red'
+                          placeholder='Email'
+                          {...register('email', rules.email)}
+                        />
+                        <div className='mt-1 text-red min-h-[1.25rem] text-sm'>{errors.email?.message}</div>
+                      </td>
+                    </tr>
+                    <tr className='flex flex-col md:flex-row'>
+                      <td className='text-sm font-bold text-gray-700 md:w-1/4 mr-0 lg:pt-2 pt-0'>Password:</td>
+                      <td className='md:w-2/3'>
+                        <input
+                          type='password'
+                          className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red'
+                          placeholder='Password'
+                          {...register('password', rules.password)}
+                        />
+                        <div className='mt-1 text-red min-h-[1.25rem] text-sm'>{errors.password?.message}</div>
+                      </td>
+                    </tr>
+                    <tr className='flex flex-col md:flex-row'>
+                      <td className='text-sm font-bold text-gray-700 md:w-1/4 mr-0 lg:pt-2 pt-0'>Confirm Password:</td>
+                      <td className='md:w-2/3'>
+                        <input
+                          type='password'
+                          className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red'
+                          placeholder='Re-enter Password'
+                          {...register('confirmPassword', rules.confirmPassword)}
+                        />
+                        <div className='mt-1 text-red min-h-[1.25rem] text-sm'>{errors.confirmPassword?.message}</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={2} className='text-center'>
+                        <div className='flex justify-end items-end space-x-4 lg:px-12 md:px-14 px-0 mt-4 lg:mb-10 mb-5'>
+                          <button className='flex justify-end px-4 py-2 rounded-md text-sm font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red'>
+                            Sign Up with
+                            <img
+                              src='https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/Icon%2FGoogleIcon.png?alt=media&token=cf52345a-64c4-4f27-b3ab-8eddf16079b4'
+                              alt='Google logo'
+                              className='ml-2 lg:mr-44 mr-30 w-5 h-5'
+                            />
+                          </button>
+                          <button
+                            type='submit'
+                            className='px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red hover:bg-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+                          >
+                            Sign Up
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={2} className='text-center'>
+                        <hr className='my-4 border-gray-300' />
+                        <span className='text-sm text-gray-600'>I already have an account</span>
+                        <Link to='/login' className='text-sm text-red hover:underline ml-2'>
                           Login
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colSpan={2} className='text-center'>
-                      <hr className='my-4 border-gray-300' />
-                      <span className='text-sm text-gray-600'>I don't have an account</span>
-                      <Link to='/register' className='text-sm text-red hover:underline ml-2'>
-                        Sign Up
-                      </Link>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                        </Link>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
             </div>
           </div>
         </div>
