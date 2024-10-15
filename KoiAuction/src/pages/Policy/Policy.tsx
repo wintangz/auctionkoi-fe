@@ -1,7 +1,7 @@
 export default function Policy() {
   return (
-    <div className='min-h-screen'>
-      <div className='container mx-auto px-4 py-8 max-w-6xl text-justify'>
+    <div className='min-h-screen mb-8'>
+      <div className='container mx-auto px-10 py-8 max-w-6xl text-justify'>
         <h1 className='text-2xl font-bold mb-6 text-gray-900'>Policy</h1>
         <div className='space-y-6'>
           <section>
