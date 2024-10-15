@@ -8,6 +8,7 @@ import Blogs from './components/Blogs/Blogs'
 import AboutUs from './components/AboutUs/AboutUs'
 import Farms from './pages/Farms/Farms'
 import { usePageTitle } from './hooks/usePageTitle'
+import Policy from './pages/Policy/Policy'
 
 export default function useRouteElement() {
   usePageTitle()
@@ -66,6 +67,14 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <Farms />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/policy',
+      element: (
+        <MainLayout>
+          <Policy />
         </MainLayout>
       )
     }
