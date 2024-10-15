@@ -6,8 +6,12 @@ import MainLayout from './layouts/MainLayout'
 import Auction from './components/Auction/Auction'
 import Blogs from './components/Blogs/Blogs'
 import AboutUs from './components/AboutUs/AboutUs'
+import Farms from './pages/Farms/Farms'
+import { usePageTitle } from './hooks/usePageTitle'
 
 export default function useRouteElement() {
+  usePageTitle()
+
   const routeElements = useRoutes([
     {
       path: '/',
@@ -54,6 +58,14 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <AboutUs />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/farms',
+      element: (
+        <MainLayout>
+          <Farms />
         </MainLayout>
       )
     }

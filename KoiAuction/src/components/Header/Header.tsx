@@ -9,7 +9,7 @@ export default function Header() {
     setIsMenuOpen(!isMenuOpen)
   }
 
-  const menuItems = ['Auction', 'Blogs', 'About', 'Contact', 'Login']
+  const menuItems = ['Auction', 'Blogs', 'About', 'Farms', 'Contact', 'Login']
 
   return (
     <header className=''>
