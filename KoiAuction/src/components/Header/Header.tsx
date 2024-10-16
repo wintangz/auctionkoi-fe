@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Menu, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { Menu, X } from 'lucide-react'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -12,7 +12,7 @@ export default function Header() {
   const menuItems = ['Auction', 'Blogs', 'About', 'Farms', 'Policy', 'Login']
 
   return (
-    <header className=''>
+    <header className='sticky top-0 bg-white z-50'>
       <div className='max-w-8xl mx-auto px-4 sm:px-6 lg:px-20 lg:py-2'>
         <div className='flex justify-between h-16'>
           <div className='flex items-center'>
