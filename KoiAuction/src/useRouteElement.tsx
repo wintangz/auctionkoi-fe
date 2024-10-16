@@ -1,14 +1,14 @@
 import { useRoutes } from 'react-router-dom'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Home from './pages/Home'
+import Login from './pages/LoginPage'
+import Register from './pages/RegisterPage'
+import Home from './pages/HomePage'
 import MainLayout from './layouts/MainLayout'
 import Auction from './components/Auction/Auction'
 import Blogs from './components/Blogs/Blogs'
 import AboutUs from './components/AboutUs/AboutUs'
-import Farms from './pages/Farms/Farms'
+import Farms from './pages/FarmsPage/Farms'
 import { usePageTitle } from './hooks/usePageTitle'
-import Policy from './pages/Policy/Policy'
+import Policy from './pages/PolicyPage/Policy'
 
 export default function useRouteElement() {
   usePageTitle()

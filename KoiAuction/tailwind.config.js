@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        red: '#bf292d'
+        red: '#bf292d',
+        brown: '#E1DED6'
       },
       screens: {
         'sm-md': '900px'
