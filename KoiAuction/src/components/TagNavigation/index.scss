@@ -1,0 +1,45 @@
+.tab-navigation {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start; // Bắt đầu từ bên trái
+    gap: 20px; // Khoảng cách giữa các item
+    align-items: center; // Căn giữa theo chiều dọc
+    border-bottom: 2px solid black; // Đường kẻ đen dưới tất cả các item
+    flex-direction: row; // Đảm bảo các item được xếp theo hàng ngang
+  
+    &__item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+        position: relative;
+        gap: 10px;
+        flex: 0 1 auto; // Đảm bảo item không chiếm hết không gian
+        white-space: nowrap; // Ngăn không cho text xuống dòng
+  
+      i {
+        margin-bottom: 5px;
+      }
+  
+      span {
+        font-size: 20px;
+      }
+  
+      &::after {
+        content: "";
+        width: 0;
+        height: 2px;
+        background-color: red;
+        position: absolute;
+        bottom: -2px; // Căn chỉnh cho trùng với đường kẻ màu đen
+        left: 0;
+        transition: width 0.3s ease;
+      }
+  
+      &.active::after {
+        width: 100%; // Khi item active, đường kẻ đỏ xuất hiện đúng kích thước của item
+      }
+    }
+  }
+  

@@ -13,7 +13,9 @@ export function usePageTitle() {
       '/blogs': 'Blogs - KoiAuction',
       '/about': 'About - KoiAuction',
       '/farms': 'Farms - KoiAuction',
-      '/policy': 'Policy - KoiAuction'
+      '/policy': 'Policy - KoiAuction',
+      '/profile': 'Profile - KoiAuction',
+      '/auction-history':"Auction History - KoiAuction"
     }
 
     const title = pathToTitleMap[location.pathname] || 'KoiAuction'

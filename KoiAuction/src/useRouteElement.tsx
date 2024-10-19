@@ -9,6 +9,9 @@ import AboutUs from './components/AboutUs/AboutUs'
 import Farms from './pages/FarmsPage/Farms'
 import { usePageTitle } from './hooks/usePageTitle'
 import Policy from './pages/PolicyPage/Policy'
+import Profile from './pages/ProfilePage'
+import KoiList from './pages/AuctionHistoryPage'
+import HistoryAuction from './pages/AuctionHistoryPage'
 
 export default function useRouteElement() {
   usePageTitle()
@@ -75,6 +78,22 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <Policy />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/profile',
+      element: (
+        <MainLayout>
+          <Profile />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/auction-history',
+      element: (
+        <MainLayout>
+          <HistoryAuction />
         </MainLayout>
       )
     }
