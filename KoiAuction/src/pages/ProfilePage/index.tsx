@@ -1,7 +1,4 @@
 import './index.scss'
-import accountImg from '../../assets/img/account.png'
-import historyImg from '../../assets/img/history.png'
-import changePasswordImg from '../../assets/img/changepassword.png'
 import { useState } from 'react' // Import useState
 import ImageUpload from '../../components/UploadImage'
 import { Button, Form, Input, Modal } from 'antd'

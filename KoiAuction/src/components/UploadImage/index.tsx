@@ -1,12 +1,11 @@
 // src/ImageUpload.tsx
 import React, { useState, ChangeEvent, useCallback } from 'react'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+
 import Cropper from 'react-easy-crop'
 import ReactModal from 'react-modal'
 import './index.scss'
 import { toast } from 'react-toastify'
 import getCroppedImg from '../../configs/cropImage'
-import { storage } from '../../configs/firebase.config'
 
 ReactModal.setAppElement('#root') // Đảm bảo rằng bạn đã có ID 'root' trong HTML
 
@@ -83,13 +82,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imgUrl }) => {
     if (croppedImage && file) {
       setIsUploading(true)
       try {
-        console.log('Đang upload ảnh...')
-        const response = await fetch(croppedImage)
-        const blob = await response.blob()
+        // console.log('Đang upload ảnh...')
+        // const response = await fetch(croppedImage)
+        // const blob = await response.blob()
 
-        const storageRef = ref(storage, `images/${file.name}`)
-        const snapshot = await uploadBytes(storageRef, blob)
-        const downloadURL = await getDownloadURL(snapshot.ref)
+        // const storageRef = ref(storage, `images/${file.name}`)
+        // const snapshot = await uploadBytes(storageRef, blob)
+        // const downloadURL = await getDownloadURL(snapshot.ref)
 
         // Gửi link tới API để lưu vào database
         // await api.put('Account/update-profile', JSON.stringify(downloadURL))

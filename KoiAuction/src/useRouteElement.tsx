@@ -10,7 +10,6 @@ import Farms from './pages/FarmsPage/Farms'
 import { usePageTitle } from './hooks/usePageTitle'
 import Policy from './pages/PolicyPage/Policy'
 import Profile from './pages/ProfilePage'
-import KoiList from './pages/AuctionHistoryPage'
 import HistoryAuction from './pages/AuctionHistoryPage'
 
 export default function useRouteElement() {

@@ -95,12 +95,12 @@ const HistoryAuction: React.FC = () => {
     const matchesVariety = selectedVariety ? koi.variety.toLowerCase() === selectedVariety.toLowerCase() : true
     return matchesName && matchesSex && matchesVariety
   })
-  const sortedKois = filteredKois.sort((a, b) => {
-    if (sortOrder === 'oldest') {
-      return new Date(a.bidTime).getTime() - new Date(b.bidTime).getTime()
-    }
-    return new Date(b.bidTime).getTime() - new Date(a.bidTime).getTime() // Mặc định là sắp xếp mới nhất trước
-  })
+  // const sortedKois = filteredKois.sort((a, b) => {
+  //   if (sortOrder === 'oldest') {
+  //     return new Date(a.bidTime).getTime() - new Date(b.bidTime).getTime()
+  //   }
+  //   return new Date(b.bidTime).getTime() - new Date(a.bidTime).getTime() // Mặc định là sắp xếp mới nhất trước
+  // })
 
   // Tính toán chỉ số bắt đầu và kết thúc
   const indexOfLastKoi = currentPage * itemsPerPage
