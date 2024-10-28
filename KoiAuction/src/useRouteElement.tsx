@@ -6,11 +6,13 @@ import MainLayout from './layouts/MainLayout'
 import Auction from './components/Auction/Auction'
 import Blogs from './components/Blogs/Blogs'
 import AboutUs from './components/AboutUs/AboutUs'
-import Farms from './pages/FarmsPage/Farms'
+
 import { usePageTitle } from './hooks/usePageTitle'
 import Policy from './pages/PolicyPage/Policy'
 import Profile from './pages/ProfilePage'
 import HistoryAuction from './pages/AuctionHistoryPage'
+import FarmPage from './pages/FarmsPage/Farms'
+import AuctionDetailPage from './pages/AuctionDetailPage/AuctionDetail'
 
 export default function useRouteElement() {
   usePageTitle()
@@ -68,7 +70,7 @@ export default function useRouteElement() {
       path: '/farms',
       element: (
         <MainLayout>
-          <Farms />
+          <FarmPage />
         </MainLayout>
       )
     },
@@ -93,6 +95,14 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <HistoryAuction />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/auction-detail',
+      element: (
+        <MainLayout>
+          <AuctionDetailPage />
         </MainLayout>
       )
     }
