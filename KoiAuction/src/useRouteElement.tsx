@@ -20,7 +20,6 @@ function ProtectedRoute() {
   return isAuthenticated ? <Outlet /> : <Navigate to='/login'></Navigate>
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 function RejectedRoute() {
   const isAuthenticated = false
   return isAuthenticated ? <Outlet /> : <Navigate to='/'></Navigate>
