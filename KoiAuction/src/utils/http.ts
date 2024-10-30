@@ -1,51 +1,61 @@
 import axios, { AxiosError, type AxiosInstance } from 'axios'
-
+import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import HttpStatusCode from '../constants/httpStatusCode.enum'
-import { AuthResponse } from '../types/Auth.type'
 import { clearAccessTokenFromLS, getAccessTokenFromLS, saveAccessTokenToLS } from './auth'
+
+interface DecodedToken {
+  sub: string
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string
+  exp: number
+}
 
 class Http {
   instance: AxiosInstance
   private accessToken: string
+
   constructor() {
     this.accessToken = getAccessTokenFromLS()
     this.instance = axios.create({
-      baseURL: 'https://api-ecom.duthanhduoc.com/',
+      baseURL: 'https://koiauctionwebapp.azurewebsites.net/api/',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'
       }
     })
+
     this.instance.interceptors.request.use(
       (config) => {
         if (this.accessToken && config.headers) {
           config.headers.Authorization = this.accessToken
-          return config
         }
         return config
       },
-      (error) => {
-        return Promise.reject(error)
-      }
+      (error) => Promise.reject(error)
     )
+
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
-        if (url === '/login' || url === '/register') {
-          this.accessToken = (response.data as AuthResponse).data.access_token
+        if (url === '/Authentication/login' || url === '/Authentication/register/customer') {
+          const token = (response.data as { value: string }).value
+          this.accessToken = 'Bearer ' + token
           saveAccessTokenToLS(this.accessToken)
+
+          const decoded: DecodedToken = jwtDecode(token)
+          const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+          localStorage.setItem('roles', role)
         } else if (url === '/logout') {
           this.accessToken = ''
           clearAccessTokenFromLS()
         }
         return response
       },
-      function (error: AxiosError) {
+      (error: AxiosError) => {
         if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any | undefined = error.response?.data
-          const message = data.message || error.message
+          const message = data?.message || error.message
           toast.error(message)
         }
         return Promise.reject(error)

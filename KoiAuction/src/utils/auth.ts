@@ -3,7 +3,7 @@ export const saveAccessTokenToLS = (access_token: string) => {
 }
 
 export const clearAccessTokenFromLS = () => {
-  localStorage.removeItem('access_token')
+  localStorage.removeItem('access_token', 'roles')
 }
 
 export const getAccessTokenFromLS = () => localStorage.getItem('access_token') || ''

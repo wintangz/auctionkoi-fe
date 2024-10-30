@@ -1,12 +1,15 @@
 'use client'
 
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Menu, X, User, LogOut, Settings } from 'lucide-react'
+import { AppContext } from '../../contexts/app.context'
 
 export default function CustomerHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const { logout } = useContext(AppContext)
+  const navigate = useNavigate()
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -16,10 +19,15 @@ export default function CustomerHeader() {
     setIsUserMenuOpen(!isUserMenuOpen)
   }
 
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
+
   const menuItems = ['Auction', 'Blogs', 'About', 'Farms', 'Policy']
 
   return (
-    <header className='sticky top-0 bg-white z-50 shadow-sm'>
+    <header className='sticky top-0 bg-white z-50'>
       <div className='max-w-8xl mx-auto px-4 sm:px-6 lg:px-20 lg:py-2'>
         <div className='flex justify-between h-16'>
           <div className='flex items-center'>
@@ -58,10 +66,13 @@ export default function CustomerHeader() {
                     <Settings className='inline-block w-4 h-4 mr-2' />
                     Settings
                   </a>
-                  <a href='/logout' className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'>
+                  <button
+                    onClick={handleLogout} // Use the handleLogout function here
+                    className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  >
                     <LogOut className='inline-block w-4 h-4 mr-2' />
                     Logout
-                  </a>
+                  </button>
                 </div>
               )}
             </div>
@@ -105,12 +116,12 @@ export default function CustomerHeader() {
             >
               Settings
             </a>
-            <a
-              href='/logout'
-              className='text-gray-700 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium'
+            <button
+              onClick={handleLogout}
+              className='text-gray-700 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium w-full text-left'
             >
               Logout
-            </a>
+            </button>
           </div>
         </div>
       )}
