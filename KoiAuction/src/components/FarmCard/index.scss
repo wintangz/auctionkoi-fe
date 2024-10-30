@@ -1,41 +1,40 @@
 .farm-card {
-    width: 50%; /* Độ rộng của mỗi card */
-    border: 1px solid #ddd; /* Đường viền nhẹ để tách card */
-    border-radius: 8px; /* Bo góc nhẹ */
-    overflow: hidden; /* Giúp hình ảnh không tràn ra ngoài */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
-    transition: transform 0.3s ease; /* Hiệu ứng phóng to nhẹ khi hover */
-    margin: 16px; /* Khoảng cách giữa các card */
-  }
-  
-  .farm-card:hover {
-    transform: scale(1.05); /* Phóng to khi hover */
-  }
-  
-  .farm-card-image {
-    width: 100%; /* Hình ảnh chiếm toàn bộ chiều ngang của card */
-    height: 200px; /* Chiều cao cố định cho ảnh */
-    object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
-  }
-  
-  .farm-card-content {
-    padding: 16px; /* Khoảng cách bên trong card */
-    background-color: #fff; /* Màu nền trắng cho nội dung */
-  }
-  
-  .farm-card-content h3 {
-    font-size: 1.7em; /* Kích thước tiêu đề lớn hơn một chút */
-    margin-bottom: 8px; /* Khoảng cách giữa tiêu đề và nội dung bên dưới */
-    color: #333; /* Màu chữ của tiêu đề */
-  }
-  
-  .farm-card-content p {
-    font-size: 1.4em; /* Kích thước chữ nhỏ hơn */
-    margin: 4px 0; /* Khoảng cách giữa các đoạn văn */
-    color: #666; /* Màu chữ nhạt hơn cho phần mô tả */
-  }
-  
-  .farm-card-content strong {
-    color: #333; /* Màu đậm hơn cho các đoạn quan trọng (vd: Breeder, Location) */
-  }
-  
+  width: 50%; /* Độ rộng của mỗi card */
+  border: 1px solid #ddd; /* Đường viền nhẹ để tách card */
+  border-radius: 8px; /* Bo góc nhẹ */
+  overflow: hidden; /* Giúp hình ảnh không tràn ra ngoài */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+  transition: transform 0.3s ease; /* Hiệu ứng phóng to nhẹ khi hover */
+  margin: 16px; /* Khoảng cách giữa các card */
+}
+
+.farm-card:hover {
+  transform: scale(1.05); /* Phóng to khi hover */
+}
+
+.farm-card-image {
+  width: 100%; /* Hình ảnh chiếm toàn bộ chiều ngang của card */
+  height: 200px; /* Chiều cao cố định cho ảnh */
+  object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+}
+
+.farm-card-content {
+  padding: 16px; /* Khoảng cách bên trong card */
+  background-color: #fff; /* Màu nền trắng cho nội dung */
+}
+
+.farm-card-content h3 {
+  font-size: 1.7em; /* Kích thước tiêu đề lớn hơn một chút */
+  margin-bottom: 8px; /* Khoảng cách giữa tiêu đề và nội dung bên dưới */
+  color: #333; /* Màu chữ của tiêu đề */
+}
+
+.farm-card-content p {
+  font-size: 1.4em; /* Kích thước chữ nhỏ hơn */
+  margin: 4px 0; /* Khoảng cách giữa các đoạn văn */
+  color: #666; /* Màu chữ nhạt hơn cho phần mô tả */
+}
+
+.farm-card-content strong {
+  color: #333; /* Màu đậm hơn cho các đoạn quan trọng (vd: Breeder, Location) */
+}
