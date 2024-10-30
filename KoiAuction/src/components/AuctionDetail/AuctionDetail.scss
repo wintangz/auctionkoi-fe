@@ -1,0 +1,97 @@
+.auction-page {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .main-image-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .main-fish-image {
+    width: 300px;
+    height: auto;
+  }
+  
+  .thumbnail-section {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .thumbnail {
+    width: 50px;
+    height: auto;
+  }
+  
+  .details-section {
+    flex: 2;
+    font-size: 25px;
+  }
+  
+  .reserve-price span {
+    color: green;
+  }
+  
+  .additional-info {
+    margin-top: 20px;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .time-section {
+    margin-top: 20px;
+  }
+  
+  .time-section span {
+    color: red;
+  }
+  
+  .bidder-list {
+    margin-top: 20px;
+  }
+  
+  .bidder-list table {
+    width: 60%;
+    border-collapse: collapse;
+    border: 1px solid black;
+  }
+  
+  .bidder-list th, .bidder-list td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .bid-section {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .bid-section label {
+    margin-right: 10px;
+  }
+  
+  .bid-section input {
+    width: 100px;
+    padding: 5px;
+    margin-right: 10px;
+  }
+  
+  .bid-now-btn {
+    background-color: red;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .bid-now-btn:hover {
+    background-color: darkred;
+  }
+  
