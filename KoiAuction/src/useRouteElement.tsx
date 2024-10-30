@@ -1,4 +1,4 @@
-import { useRoutes } from 'react-router-dom'
+import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import Login from './pages/LoginPage'
 import Register from './pages/RegisterPage'
 import Home from './pages/HomePage'
@@ -11,6 +11,21 @@ import { usePageTitle } from './hooks/usePageTitle'
 import Policy from './pages/PolicyPage/Policy'
 import Profile from './pages/ProfilePage'
 import HistoryAuction from './pages/AuctionHistoryPage'
+import { useContext } from 'react'
+import { AppContext } from './contexts/app.context'
+import path from './constants/path'
+
+// eslint-disable-next-line react-refresh/only-export-components
+function ProtectedRoute() {
+  const { isAuthenticated } = useContext(AppContext)
+  return isAuthenticated ? <Outlet /> : <Navigate to={path.login} />
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+function RejectedRoute() {
+  const { isAuthenticated } = useContext(AppContext)
+  return !isAuthenticated ? <Outlet /> : <Navigate to={path.home} />
+}
 
 export default function useRouteElement() {
   usePageTitle()
@@ -18,6 +33,7 @@ export default function useRouteElement() {
   const routeElements = useRoutes([
     {
       path: '/',
+      index: true,
       element: (
         <MainLayout>
           <Home />
@@ -25,23 +41,34 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/login',
-      element: (
-        <MainLayout>
-          <Login />
-        </MainLayout>
-      )
+      path: '',
+      element: <ProtectedRoute />,
+      children: []
     },
     {
-      path: '/register',
-      element: (
-        <MainLayout>
-          <Register />
-        </MainLayout>
-      )
+      path: '',
+      element: <RejectedRoute />,
+      children: [
+        {
+          path: path.login,
+          element: (
+            <MainLayout>
+              <Login />
+            </MainLayout>
+          )
+        },
+        {
+          path: path.register,
+          element: (
+            <MainLayout>
+              <Register />
+            </MainLayout>
+          )
+        }
+      ]
     },
     {
-      path: '/auction',
+      path: path.auction,
       element: (
         <MainLayout>
           <Auction />
@@ -49,7 +76,7 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/blogs',
+      path: path.blogs,
       element: (
         <MainLayout>
           <Blogs />
@@ -57,7 +84,7 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/about',
+      path: path.about,
       element: (
         <MainLayout>
           <AboutUs />
@@ -65,7 +92,7 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/farms',
+      path: path.farms,
       element: (
         <MainLayout>
           <Farms />
@@ -73,7 +100,7 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/policy',
+      path: path.policy,
       element: (
         <MainLayout>
           <Policy />
@@ -81,7 +108,7 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/profile',
+      path: path.profile,
       element: (
         <MainLayout>
           <Profile />
@@ -89,7 +116,7 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/auction-history',
+      path: path.auctionHistory,
       element: (
         <MainLayout>
           <HistoryAuction />

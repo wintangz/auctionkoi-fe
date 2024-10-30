@@ -1,21 +1,22 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import path from '../constants/path'
 
 export function usePageTitle() {
   const location = useLocation()
 
   useEffect(() => {
     const pathToTitleMap: { [key: string]: string } = {
-      '/': 'Home - KoiAuction',
-      '/login': 'Login - KoiAuction',
-      '/register': 'Register - KoiAuction',
-      '/auction': 'Auction - KoiAuction',
-      '/blogs': 'Blogs - KoiAuction',
-      '/about': 'About - KoiAuction',
-      '/farms': 'Farms - KoiAuction',
-      '/policy': 'Policy - KoiAuction',
-      '/profile': 'Profile - KoiAuction',
-      '/auction-history':"Auction History - KoiAuction"
+      [path.home]: 'Home - KoiAuction',
+      [path.login]: 'Login - KoiAuction',
+      [path.register]: 'Register - KoiAuction',
+      [path.auction]: 'Auction - KoiAuction',
+      [path.blogs]: 'Blogs - KoiAuction',
+      [path.about]: 'About - KoiAuction',
+      [path.farms]: 'Farms - KoiAuction',
+      [path.policy]: 'Policy - KoiAuction',
+      [path.profile]: 'Profile - KoiAuction',
+      [path.auctionHistory]: 'Auction History - KoiAuction'
     }
 
     const title = pathToTitleMap[location.pathname] || 'KoiAuction'
