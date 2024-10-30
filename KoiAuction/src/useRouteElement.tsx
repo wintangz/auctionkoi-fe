@@ -16,11 +16,10 @@ import AuctionDetailPage from './pages/AuctionDetailPage/AuctionDetail'
 import { useContext } from 'react'
 import { AppContext } from './contexts/app.context'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ProtectedRoute() {
-  const { isAuthenticated } = useContext(AppContext)
-  return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
-}
+// function ProtectedRoute() {
+//   const { isAuthenticated } = useContext(AppContext)
+//   return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
+// }
 
 // eslint-disable-next-line react-refresh/only-export-components
 function RejectedRoute() {

@@ -1,52 +1,52 @@
 .card {
-    background-color: white;
-    margin: 20px 0; // Giảm margin bên phải và bên trái
+  background-color: white;
+  margin: 20px 0; // Giảm margin bên phải và bên trái
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  width: 49%;
+
+  img {
+    width: 150px; // Có thể điều chỉnh kích thước theo ý muốn
+    height: auto;
+  }
+
+  .card-info {
+    padding: 20px;
+    flex: 1;
     display: flex;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-    width:49%;
+    justify-content: space-between;
+    flex-direction: column; // Đặt các chi tiết theo cột
 
-    img {
-        width: 150px; // Có thể điều chỉnh kích thước theo ý muốn
-        height: auto;
+    .card-details {
+      font-size: 20px;
     }
 
-    .card-info {
-        padding: 20px;
-        flex: 1;
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column; // Đặt các chi tiết theo cột
-
-        .card-details {
-            font-size: 20px;
-        }
-
-        .status {
-            color: green;
-            font-size: 20px;
-        }
-
-        .delivery {
-            color: orange;
-            font-size: 20px;
-        }
-
-        .finished-delivery {
-            color: #28a745;
-            font-size: 20px;
-        }
-
-        .btn-view {
-            background-color: #d9534f;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px; // Thêm khoảng cách trên nút
-        }
+    .status {
+      color: green;
+      font-size: 20px;
     }
+
+    .delivery {
+      color: orange;
+      font-size: 20px;
+    }
+
+    .finished-delivery {
+      color: #28a745;
+      font-size: 20px;
+    }
+
+    .btn-view {
+      background-color: #d9534f;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px; // Thêm khoảng cách trên nút
+    }
+  }
 }
