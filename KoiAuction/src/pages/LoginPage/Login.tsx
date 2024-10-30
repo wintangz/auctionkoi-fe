@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { loginSchema, Schema } from '../../utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Input from '../../components/Input/Input'
@@ -7,11 +7,16 @@ import { useMutation } from '@tanstack/react-query'
 import { loginAccount } from '../../apis/Auth.api'
 import { FormRegister } from '../../types/FormRegister.type'
 import { isAxiosUnProcessableEntityError } from '../../utils/utils'
-import { ResponseApi } from '../../types/Utils.type'
+import { ErrorResponseApi } from '../../types/Utils.type'
+import { useContext } from 'react'
+import { AppContext } from '../../contexts/app.context'
+import Button from '../../components/Button/Button'
 
 type FormData = Omit<Schema, 'confirmPassword'>
 
 export default function Login() {
+  const { setIsAuthenticated } = useContext(AppContext)
+  const nagivate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -23,11 +28,12 @@ export default function Login() {
 
   const onSubmit = handleSubmit((data) => {
     loginAccountMutation.mutate(data, {
-      onSuccess: (data) => {
-        console.log(data)
+      onSuccess: () => {
+        setIsAuthenticated(true)
+        nagivate('/')
       },
       onError: (error) => {
-        if (isAxiosUnProcessableEntityError<ResponseApi<FormData>>(error)) {
+        if (isAxiosUnProcessableEntityError<ErrorResponseApi<FormData>>(error)) {
           const formError = error.response?.data.data
           if (formError?.email) {
             setError('email', {
@@ -104,12 +110,14 @@ export default function Login() {
                               className='ml-2 w-5 h-5'
                             />
                           </button>
-                          <button
+                          <Button
                             type='submit'
-                            className='px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red hover:bg-red'
+                            className='px-4 py-2 flex justify-center items-center border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red hover:bg-red'
+                            isLoading={loginAccountMutation.isPending}
+                            disabled={loginAccountMutation.isPending}
                           >
                             Login
-                          </button>
+                          </Button>
                         </div>
                       </td>
                     </tr>

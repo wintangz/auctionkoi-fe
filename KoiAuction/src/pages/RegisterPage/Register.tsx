@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { schema, Schema } from '../../utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Input from '../../components/Input/Input'
@@ -8,9 +8,14 @@ import { registerAccount } from '../../apis/Auth.api'
 import { FormRegister } from '../../types/FormRegister.type'
 import { omit } from 'lodash'
 import { isAxiosUnProcessableEntityError } from '../../utils/utils'
-import { ResponseApi } from '../../types/Utils.type'
+import { ErrorResponseApi } from '../../types/Utils.type'
+import { useContext } from 'react'
+import { AppContext } from '../../contexts/app.context'
+import Button from '../../components/Button/Button'
 
 export default function Register() {
+  const { setIsAuthenticated } = useContext(AppContext)
+  const nagivate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -23,11 +28,12 @@ export default function Register() {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirmPassword'])
     registerAccountMutation.mutate(body, {
-      onSuccess: (data) => {
-        console.log(data)
+      onSuccess: () => {
+        setIsAuthenticated(true)
+        nagivate('/')
       },
       onError: (error) => {
-        if (isAxiosUnProcessableEntityError<ResponseApi<Omit<FormRegister, 'confirmPassword'>>>(error)) {
+        if (isAxiosUnProcessableEntityError<ErrorResponseApi<Omit<FormRegister, 'confirmPassword'>>>(error)) {
           const formError = error.response?.data.data
           if (formError?.email) {
             setError('email', {
@@ -117,12 +123,14 @@ export default function Register() {
                               className='ml-2 w-5 h-5'
                             />
                           </button>
-                          <button
+                          <Button
                             type='submit'
-                            className='px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red hover:bg-red'
+                            className='px-4 py-2 flex justify-center items-center border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red hover:bg-red'
+                            isLoading={registerAccountMutation.isPending}
+                            disabled={registerAccountMutation.isPending}
                           >
                             Sign Up
-                          </button>
+                          </Button>
                         </div>
                       </td>
                     </tr>

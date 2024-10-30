@@ -1,4 +1,4 @@
-import { useRoutes } from 'react-router-dom'
+import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import Login from './pages/LoginPage'
 import Register from './pages/RegisterPage'
 import Home from './pages/HomePage'
@@ -14,6 +14,18 @@ import HistoryAuction from './pages/AuctionHistoryPage'
 import FarmPage from './pages/FarmsPage/Farms'
 import AuctionDetailPage from './pages/AuctionDetailPage/AuctionDetail'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function ProtectedRoute() {
+  const isAuthenticated = true
+  return isAuthenticated ? <Outlet /> : <Navigate to='/login'></Navigate>
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+function RejectedRoute() {
+  const isAuthenticated = false
+  return isAuthenticated ? <Outlet /> : <Navigate to='/'></Navigate>
+}
+
 export default function useRouteElement() {
   usePageTitle()
 
@@ -27,20 +39,26 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/login',
-      element: (
-        <MainLayout>
-          <Login />
-        </MainLayout>
-      )
-    },
-    {
-      path: '/register',
-      element: (
-        <MainLayout>
-          <Register />
-        </MainLayout>
-      )
+      path: '',
+      element: <RejectedRoute />,
+      children: [
+        {
+          path: '/login',
+          element: (
+            <MainLayout>
+              <Login />
+            </MainLayout>
+          )
+        },
+        {
+          path: '/register',
+          element: (
+            <MainLayout>
+              <Register />
+            </MainLayout>
+          )
+        }
+      ]
     },
     {
       path: '/auction',
