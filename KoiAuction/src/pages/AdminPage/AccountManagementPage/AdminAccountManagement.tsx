@@ -10,8 +10,16 @@ export default function AdminAccountManagement() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('https://672325712108960b9cc6e0c5.mockapi.io/users')
-        setUsers(response.data)
+        const token = localStorage.getItem('access_token') || ''
+        const response = await axios.get(
+          'https://koiauctionwebapp.azurewebsites.net/api/User/get-all-current-users-by-manager',
+          {
+            headers: {
+              Authorization: token
+            }
+          }
+        )
+        setUsers(response.data.value)
       } catch (error) {
         console.error('Error fetching user data:', error)
       }
@@ -27,7 +35,7 @@ export default function AdminAccountManagement() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<(typeof users)[0] | null>(null)
 
-  const filteredUsers = users.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredUsers = users.filter((user) => user.userName.toLowerCase().includes(searchTerm.toLowerCase()))
 
   const toggleDropdown = (id: string) => {
     setActiveDropdown(activeDropdown === id ? null : id)
@@ -163,9 +171,6 @@ export default function AdminAccountManagement() {
                     SĐT
                   </th>
                   <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                    Ngày sinh
-                  </th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Giới tính
                   </th>
                   <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
@@ -188,13 +193,12 @@ export default function AdminAccountManagement() {
                           />
                         </div>
                         <div className='ml-4'>
-                          <div className='text-sm font-medium text-gray-900'>{user.name}</div>
+                          <div className='text-sm font-medium text-gray-900'>{user.userName}</div>
                         </div>
                       </div>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{user.email}</td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{user.phone}</td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{user.dateOfBirth}</td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-blue'>
                       <span
                         className={`px-2 inline-flex text-xs leading-5 rounded-full ${user.gender === 'Male' ? 'bg-blue text-white' : 'bg-pink-100 text-pink-800'}`}
@@ -257,8 +261,8 @@ export default function AdminAccountManagement() {
                   <input
                     id='name'
                     type='text'
-                    value={currentUser.name}
-                    onChange={(e) => setCurrentUser({ ...currentUser, name: e.target.value })}
+                    value={currentUser.userName}
+                    onChange={(e) => setCurrentUser({ ...currentUser, userName: e.target.value })}
                     className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
                   />
                 </div>
@@ -283,18 +287,6 @@ export default function AdminAccountManagement() {
                     type='tel'
                     value={currentUser.phone}
                     onChange={(e) => setCurrentUser({ ...currentUser, phone: e.target.value })}
-                    className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
-                  />
-                </div>
-                <div>
-                  <label htmlFor='dob' className='block text-sm font-medium text-gray-700 mb-1'>
-                    Date of Birth
-                  </label>
-                  <input
-                    id='dob'
-                    type='date'
-                    value={currentUser.dateOfBirth}
-                    onChange={(e) => setCurrentUser({ ...currentUser, dateOfBirth: e.target.value })}
                     className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
                   />
                 </div>

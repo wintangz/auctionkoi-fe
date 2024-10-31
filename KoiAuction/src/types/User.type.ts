@@ -1,12 +1,9 @@
 export interface User {
   id: string
-  role: string
+  userName: string
   email: string
-  name: string
-  dateOfBirth: string
+  role: string
   gender: string
   address: string
   phone: string
-  createdAt: string
-  updatedAt: string
 }
