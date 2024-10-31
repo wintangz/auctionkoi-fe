@@ -15,11 +15,23 @@ import FarmPage from './pages/FarmsPage/Farms'
 import AuctionDetailPage from './pages/AuctionDetailPage/AuctionDetail'
 import { useContext } from 'react'
 import { AppContext } from './contexts/app.context'
+import AdminHome from './pages/AdminPage/HomePage/AdminHome'
+import AdminLayout from './layouts/AdminLayout/AdminLayout'
+import AdminAccountManagement from './pages/AdminPage/AccountManagementPage/AdminAccountManagement'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
 //   return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
 // }
+
+// eslint-disable-next-line react-refresh/only-export-components
+function AdminProtectedRoute() {
+  const { isAuthenticated } = useContext(AppContext)
+  const role = localStorage.getItem('roles') || ''
+  const isManager = role === 'MANAGER'
+
+  return isAuthenticated && isManager ? <Outlet /> : <Navigate to='/login' />
+}
 
 // eslint-disable-next-line react-refresh/only-export-components
 function RejectedRoute() {
@@ -38,6 +50,28 @@ export default function useRouteElement() {
           <Home />
         </MainLayout>
       )
+    },
+    {
+      path: '',
+      element: <AdminProtectedRoute />,
+      children: [
+        {
+          path: '/admin',
+          element: (
+            <AdminLayout>
+              <AdminHome />
+            </AdminLayout>
+          )
+        },
+        {
+          path: '/admin/account-management',
+          element: (
+            <AdminLayout>
+              <AdminAccountManagement />
+            </AdminLayout>
+          )
+        }
+      ]
     },
     {
       path: '',

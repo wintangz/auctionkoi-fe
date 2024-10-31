@@ -30,7 +30,11 @@ export default function Login() {
     loginAccountMutation.mutate(data, {
       onSuccess: () => {
         setIsAuthenticated(true)
-        nagivate('/')
+        const role = localStorage.getItem('roles') || ''
+        const isManager = role === 'MANAGER'
+        console.log(role)
+        if (isManager) nagivate('/admin')
+        else nagivate('/')
       },
       onError: (error) => {
         if (isAxiosUnProcessableEntityError<ErrorResponseApi<FormData>>(error)) {

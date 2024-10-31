@@ -2,7 +2,7 @@
 
 import { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Menu, X, User, LogOut, Settings } from 'lucide-react'
+import { Menu, X, User, LogOut, Settings, History, Tractor } from 'lucide-react'
 import { AppContext } from '../../contexts/app.context'
 
 export default function CustomerHeader() {
@@ -58,17 +58,31 @@ export default function CustomerHeader() {
               </button>
               {isUserMenuOpen && (
                 <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5'>
-                  <a href='/profile' className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'>
+                  <a href='/profile' className='block px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'>
                     <User className='inline-block w-4 h-4 mr-2' />
                     Profile
                   </a>
-                  <a href='/settings' className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'>
+                  <a
+                    href='/auction-history'
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'
+                  >
+                    <History className='inline-block w-4 h-4 mr-2' />
+                    Auction History
+                  </a>
+                  <a
+                    href='/register-breeder'
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'
+                  >
+                    <Tractor className='inline-block w-4 h-4 mr-2' />
+                    Register Breeder
+                  </a>
+                  <a href='/settings' className='block px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'>
                     <Settings className='inline-block w-4 h-4 mr-2' />
                     Settings
                   </a>
                   <button
                     onClick={handleLogout} // Use the handleLogout function here
-                    className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                    className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'
                   >
                     <LogOut className='inline-block w-4 h-4 mr-2' />
                     Logout
@@ -96,26 +110,32 @@ export default function CustomerHeader() {
         <div className='md:hidden'>
           <div className='px-2 pt-2 pb-3 space-y-1 sm:px-3'>
             {menuItems.map((item) => (
-              <a
+              <Link
                 key={item}
-                href={`/${item.toLowerCase()}`}
+                to={`/${item.toLowerCase()}`}
                 className='text-gray-700 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium'
               >
                 {item}
-              </a>
+              </Link>
             ))}
-            <a
-              href='/profile'
+            <Link
+              to='/profile'
               className='text-gray-700 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium'
             >
               Profile
-            </a>
-            <a
-              href='/settings'
+            </Link>
+            <Link
+              to='/auction-history'
+              className='text-gray-700 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium'
+            >
+              Auction History
+            </Link>
+            <Link
+              to='/settings'
               className='text-gray-700 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium'
             >
               Settings
-            </a>
+            </Link>
             <button
               onClick={handleLogout}
               className='text-gray-700 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium w-full text-left'

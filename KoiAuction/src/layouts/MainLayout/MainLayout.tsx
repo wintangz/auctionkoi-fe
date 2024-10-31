@@ -1,7 +1,5 @@
 import Footer from '../../components/Footer/Footer'
 import Header from '../../components/Header/Header'
-import { useContext } from 'react'
-import { AppContext } from '../../contexts/app.context'
 import CustomerHeader from '../../components/CustomerHeader/CustomerHeader'
 
 interface Props {
@@ -9,7 +7,7 @@ interface Props {
 }
 
 export default function MainLayout({ children }: Props) {
-  const { role } = useContext(AppContext)
+  const role = localStorage.getItem('roles') || ''
 
   const isCustomer = role === 'CUSTOMER'
 
