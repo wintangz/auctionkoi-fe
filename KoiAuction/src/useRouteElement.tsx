@@ -15,6 +15,11 @@ import FarmPage from './pages/FarmsPage/Farms'
 import AuctionDetailPage from './pages/AuctionDetailPage/AuctionDetail'
 import { useContext } from 'react'
 import { AppContext } from './contexts/app.context'
+import CreateMethodPage from './pages/CreateMethodPage/CreateMethodPage'
+import Method1Page from './pages/MethodPage/Method1Page/Method1Page'
+import Method2Page from './pages/MethodPage/Method2Page/Method2Page'
+import Method3Page from './pages/MethodPage/Method3Page/Method3Page'
+import Method4Page from './pages/MethodPage/Method4Page/Method4Page'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -122,6 +127,46 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <AuctionDetailPage />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/create-method',
+      element: (
+        <MainLayout>
+          <CreateMethodPage />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/method1',
+      element: (
+        <MainLayout>
+          <Method1Page />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/method2',
+      element: (
+        <MainLayout>
+          <Method2Page />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/method3',
+      element: (
+        <MainLayout>
+          <Method3Page />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/method4',
+      element: (
+        <MainLayout>
+          <Method4Page />
         </MainLayout>
       )
     }

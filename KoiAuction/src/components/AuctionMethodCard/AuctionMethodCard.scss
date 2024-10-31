@@ -1,0 +1,63 @@
+.auction-method-card {
+  display: flex;
+  border: 1px solid #e0e0e0;
+  position: relative;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.image-container {
+  flex: 1;
+  margin-right: 16px;
+}
+
+.image-container img {
+  width: 200px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.content {
+  flex: 2;
+  position: relative;
+  padding-right: 60px; /* Để tránh tràn nút ra khỏi phần content */
+  padding-bottom: 60px; /* Thêm không gian dưới cùng cho nút */
+}
+
+.content h3 {
+  margin: 0;
+  color: #b22222;
+  font-size: 40px;
+}
+
+.content p {
+  margin: 8px 0;
+  color: #333;
+  font-size: 25px;
+}
+
+.description-label {
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.create-auction-button {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background-color: #b22222;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.create-auction-button:hover {
+  background-color: #8b1a1a;
+}
