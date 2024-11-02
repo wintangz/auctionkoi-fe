@@ -1,0 +1,88 @@
+.method1-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+  }
+  
+  .banner {
+    width: 100%; 
+    display: flex;
+    margin-bottom: 20px;
+  
+  
+  }
+  
+  .auction-form-container {
+    width: 80%; 
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .auction-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .auction-form label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  .auction-form label span {
+    width: 30%; 
+  }
+  
+  .auction-form input[type="text"] {
+    width: 65%;
+    padding: 8px;
+    margin-left: 10px; 
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .create-method-button {
+    background-color: #b22d2d;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 20%;
+    align-self: flex-end;
+  }
+  
+  .create-method-button:hover {
+    background-color: #a02525;
+  }
+  
+  .auction-description {
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: left;
+    color: #555;
+  }
+  .koi-image {
+    max-width: 200px; 
+    max-height: 200px;
+    width: auto;
+    height: auto; 
+    object-fit: cover; 
+    border: 1px solid #ccc;
+    border-radius: 5px; 
+  }
+  
+.image-preview{
+  justify-items: flex-end;
+}
