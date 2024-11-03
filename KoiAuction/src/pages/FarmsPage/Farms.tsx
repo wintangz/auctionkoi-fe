@@ -12,7 +12,7 @@ const FarmPage: React.FC = () => {
 
   const fetchFarmData = async () => {
     try {
-      const response = await http.get<{ message: string; value: FarmDataType[] }>('KoiBreeder/koifarms')
+      const response = await http.get<{ message: string; value: FarmDataType[] }>('KoiBreeder/get-all-breeders')
       setFarmData(response.data.value || [])
     } catch (error) {
       console.error('Error fetching farm data:', error)
