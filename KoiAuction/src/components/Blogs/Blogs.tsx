@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Pagination from '../Pagination/Pagination'
 import { Blog } from '../../types/Blog.type'
+import http from '../../utils/http'
 
 export default function Blogs() {
   const [blogPosts, setBlogPosts] = useState<Blog[]>([])
@@ -11,9 +12,8 @@ export default function Blogs() {
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
-        const response = await fetch('https://6706402ba0e04071d2260d4e.mockapi.io/koiauction/blogs')
-        const data = await response.json()
-        setBlogPosts(data)
+        const response = await http.get<{ message: string; value: Blog[] }>('Blog/get-all-Blogs')
+        setBlogPosts(response.data.value)
       } catch (error) {
         console.error('Error fetching blog posts:', error)
       } finally {
@@ -67,7 +67,11 @@ export default function Blogs() {
           <div className='grid md:grid-cols-2 gap-6 mb-6 lg:mt-20 mt-10'>
             {currentPosts.map((post) => (
               <article key={post.id} className='border border-gray-200 rounded-lg overflow-hidden'>
-                <img src={post.image} alt={post.title} className='w-full h-auto object-cover' />
+                <img
+                  src={post.urlImage}
+                  alt={post.title}
+                  className='w-full h-48 object-cover' // Set a fixed height and ensure consistent aspect ratio
+                />
                 <div className='p-4'>
                   <h3 className='text-lg font-semibold mb-2'>{post.title}</h3>
                   <p className='text-sm text-gray-600 mb-2'>{post.postedDate}</p>

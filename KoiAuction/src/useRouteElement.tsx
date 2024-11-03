@@ -165,7 +165,7 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/create-method',
+      path: '/create-auction',
       element: (
         <MainLayout>
           <CreateMethodPage />

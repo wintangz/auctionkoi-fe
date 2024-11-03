@@ -1,48 +1,37 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './FarmPage.scss'
 import FarmCard from '../../components/FarmCard'
 import Pagination from '../../components/Pagination/Pagination'
-
-const farmData = [
-  {
-    title: 'Akashi Koi Farm',
-    breeder: 'Hitoshi Kameki',
-    description:
-      'Japanese Koi Buying Trip 2020. This year we heard that there might be a shortage of small koi available, so we made the decision to...',
-    location: 'Saitama, ABC Street Tokyo',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdPGDWHyeeuW36Ra8JvIUzkYwPWIaOILx9vg&s'
-  },
-  {
-    title: 'Yagenji Koi Farm',
-    breeder: 'Junine',
-    description:
-      'Japanese Koi Buying Trip 2020. This year we heard that there might be a shortage of small koi available, so we made the decision to...',
-    location: 'Yagenji, BCD Street Kyoto',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTh80DJ7KMdstIO4oSEbS8IuweohBkEKEXa3Q&s'
-  },
-  {
-    title: 'Yagenji Koi Farm',
-    breeder: 'Junine',
-    description:
-      'Japanese Koi Buying Trip 2020. This year we heard that there might be a shortage of small koi available, so we made the decision to...',
-    location: 'Yagenji, BCD Street Kyoto',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTh80DJ7KMdstIO4oSEbS8IuweohBkEKEXa3Q&s'
-  }
-]
+import http from '../../utils/http'
+import { FarmDataType } from '../../types/FarmDataType'
 
 const FarmPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1)
-  const farmsPerPage = 2 // Số lượng farm card mỗi trang
+  const farmsPerPage = 2
+  const [farmData, setFarmData] = useState<FarmDataType[]>([])
 
-  // Tính toán chỉ số bắt đầu và kết thúc
+  const fetchFarmData = async () => {
+    try {
+      const response = await http.get<{ message: string; value: FarmDataType[] }>('KoiBreeder/koifarms')
+      setFarmData(response.data.value || [])
+    } catch (error) {
+      console.error('Error fetching farm data:', error)
+      setFarmData([])
+    }
+  }
+
+  useEffect(() => {
+    fetchFarmData()
+  }, [])
+
   const indexOfLastFarm = currentPage * farmsPerPage
   const indexOfFirstFarm = indexOfLastFarm - farmsPerPage
-  const currentFarms = farmData.slice(indexOfFirstFarm, indexOfLastFarm) // Lấy farm card hiện tại
+  const currentFarms = farmData.slice(indexOfFirstFarm, indexOfLastFarm)
 
-  const totalPages = Math.ceil(farmData.length / farmsPerPage) // Tổng số trang
+  const totalPages = Math.ceil((farmData.length || 0) / farmsPerPage)
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page) // Cập nhật trang hiện tại
+    setCurrentPage(page)
   }
 
   return (
@@ -80,12 +69,12 @@ const FarmPage: React.FC = () => {
         <section className='farm-page-box'>
           {currentFarms.map((farm, index) => (
             <FarmCard
-              key={index} // Hoặc dùng farm.title nếu title là duy nhất
+              key={index}
               title={farm.title}
-              breeder={farm.breeder}
-              description={farm.description}
-              location={farm.location}
-              image={farm.image}
+              breeder={farm.breederName}
+              description={farm.koiFarmDescription}
+              location={farm.koiFarmLocation}
+              image={farm.koiFarmImage}
             />
           ))}
         </section>
