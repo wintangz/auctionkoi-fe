@@ -15,7 +15,6 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
 
   return (
     <div className='auction-page'>
-      {/* Left Section with Main Image */}
       <div className='main-image-section'>
         <img src={fishDetails.mainImage} alt={fishDetails.name} className='main-fish-image' />
         <div className='thumbnail-section'>
@@ -25,7 +24,6 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
         </div>
       </div>
 
-      {/* Right Section with Details */}
       <div className='details-section'>
         <h2>Name: {fishDetails.name}</h2>
         <h3 className='reserve-price'>
