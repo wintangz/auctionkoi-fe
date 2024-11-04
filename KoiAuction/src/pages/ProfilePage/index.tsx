@@ -8,6 +8,7 @@ function Profile() {
   const [activeItem, setActiveItem] = useState('account')
   const [form] = Form.useForm()
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleItemClick = (item: any) => {
     setActiveItem(item)
   }

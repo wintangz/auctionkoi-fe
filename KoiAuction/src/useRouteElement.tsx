@@ -6,7 +6,6 @@ import MainLayout from './layouts/MainLayout'
 import Auction from './components/Auction/Auction'
 import Blogs from './components/Blogs/Blogs'
 import AboutUs from './components/AboutUs/AboutUs'
-
 import { usePageTitle } from './hooks/usePageTitle'
 import Policy from './pages/PolicyPage/Policy'
 import Profile from './pages/ProfilePage'
@@ -23,6 +22,7 @@ import Method4Page from './pages/MethodPage/Method4Page/Method4Page'
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import AdminHome from './pages/AdminPage/HomePage/AdminHome'
 import AdminAccountManagement from './pages/AdminPage/AccountManagementPage/AdminAccountManagement'
+import AdminTransactionManagement from './pages/AdminPage/TransactionManagementPage/AdminTransactionManagement'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -73,6 +73,14 @@ export default function useRouteElement() {
           element: (
             <AdminLayout>
               <AdminAccountManagement />
+            </AdminLayout>
+          )
+        },
+        {
+          path: '/admin/transaction-management',
+          element: (
+            <AdminLayout>
+              <AdminTransactionManagement />
             </AdminLayout>
           )
         }

@@ -42,7 +42,7 @@ const AdminHeader: React.FC = () => {
     <header>
       <div className='container mx-auto px-4 py-4 flex justify-between items-center'>
         <div className='flex items-center space-x-8'>
-          <Link to='/' className='flex items-center space-x-2'>
+          <Link to='' className='flex items-center space-x-2'>
             <img
               src='https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/Logo.png?alt=media&token=e71cfc51-da8e-4bea-8619-2e64177ee62a'
               alt='Logo'
@@ -68,7 +68,11 @@ const AdminHeader: React.FC = () => {
             aria-expanded={dropdownOpen}
             aria-haspopup='true'
           >
-            <img src='' alt='abc' className='h-8 w-8 rounded-full object-cover' />
+            <img
+              src='https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/what-are-yall-opinions-about-momo-ayases-charecter-design-v0-wqfr6wvv193c1.webp?alt=media&token=ffeea10c-0885-4922-95b3-c6f355a8cb4b'
+              alt='abc'
+              className='h-8 w-8 rounded-full object-cover'
+            />
             <span className='hidden sm-md:inline-block'>Nguyen Le Hoang Dung</span>
             <svg className='h-4 w-4 fill-current' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>
               <path d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' />
@@ -95,7 +99,7 @@ const AdminHeader: React.FC = () => {
                 <li>
                   <Link
                     to='/login'
-                    className='block px-4 py-2 text-sm text-red-600 hover:bg-gray-100'
+                    className='block px-4 py-2 text-sm text-red hover:bg-gray-100'
                     onClick={handleLogout}
                   >
                     <div className='flex items-center space-x-2'>
