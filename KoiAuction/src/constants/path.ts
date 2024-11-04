@@ -12,6 +12,9 @@ const path = {
   admin: '/admin',
   accountManagement: '/admin/account-management',
   transactionManagement: '/admin/transaction-management',
+  auctionRequest: '/staff',
+  auctionRequestDetail: '/staff/auction-request-detail',
+  koibreederRequest: '/staff/koibreeder-request',
   logout: '/logout'
 }
 

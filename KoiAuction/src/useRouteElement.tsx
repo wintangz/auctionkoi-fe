@@ -23,6 +23,10 @@ import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import AdminHome from './pages/AdminPage/HomePage/AdminHome'
 import AdminAccountManagement from './pages/AdminPage/AccountManagementPage/AdminAccountManagement'
 import AdminTransactionManagement from './pages/AdminPage/TransactionManagementPage/AdminTransactionManagement'
+import StaffLayout from './layouts/StaffLayout/StaffLayout'
+import StaffAuctionRequest from './pages/StaffPage/AuctionRequestPage/StaffAuctionRequest'
+import StaffKoiBreederRequest from './pages/StaffPage/KoiBreederRequestPage/StaffKoiBreederRequest'
+import StaffAuctionRequestDetail from './pages/StaffPage/AuctionRequestDetailPage/StaffAuctionRequestDetail'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -36,6 +40,15 @@ function AdminProtectedRoute() {
   const isManager = role === 'MANAGER'
 
   return isAuthenticated && isManager ? <Outlet /> : <Navigate to='/login' />
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+function StaffProtectedRoute() {
+  const { isAuthenticated } = useContext(AppContext)
+  const role = localStorage.getItem('roles') || ''
+  const isStaff = role === 'STAFF'
+
+  return isAuthenticated && isStaff ? <Outlet /> : <Navigate to='/login' />
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -82,6 +95,36 @@ export default function useRouteElement() {
             <AdminLayout>
               <AdminTransactionManagement />
             </AdminLayout>
+          )
+        }
+      ]
+    },
+    {
+      path: '',
+      element: <StaffProtectedRoute />,
+      children: [
+        {
+          path: '/staff',
+          element: (
+            <StaffLayout>
+              <StaffAuctionRequest />
+            </StaffLayout>
+          )
+        },
+        {
+          path: '/staff/auction-request-detail',
+          element: (
+            <StaffLayout>
+              <StaffAuctionRequestDetail />
+            </StaffLayout>
+          )
+        },
+        {
+          path: '/staff/koibreeder-request',
+          element: (
+            <StaffLayout>
+              <StaffKoiBreederRequest />
+            </StaffLayout>
           )
         }
       ]

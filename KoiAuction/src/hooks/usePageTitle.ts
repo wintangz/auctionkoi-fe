@@ -19,7 +19,10 @@ export function usePageTitle() {
       [path.auctionHistory]: 'Auction History - KoiAuction',
       [path.admin]: 'Auction - Admin',
       [path.accountManagement]: 'Account Management - Admin',
-      [path.transactionManagement]: 'Transaction Management - Admin'
+      [path.transactionManagement]: 'Transaction Management - Admin',
+      [path.auctionRequest]: 'Auction Request - Staff',
+      [path.auctionRequestDetail]: 'Auction Request Detail - Staff',
+      [path.koibreederRequest]: 'Koi Breeder Request - Staff'
     }
 
     const title = pathToTitleMap[location.pathname] || 'KoiAuction'
