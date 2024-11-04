@@ -235,9 +235,7 @@ export default function AdminTransactionManagement() {
                       <td className='px-6 py-4 whitespace-nowrap'>
                         <span
                           className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            transaction.status === 'Hủy giao dịch'
-                              ? 'bg-red-100 text-red-800'
-                              : 'bg-green-100 text-green-800'
+                            transaction.status === 'Hủy giao dịch' ? 'bg-red text-white' : 'bg-green-100 text-green-800'
                           }`}
                         >
                           {transaction.status}
@@ -247,7 +245,7 @@ export default function AdminTransactionManagement() {
                         <span
                           className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                             transaction.result === 'Hoàn tiền'
-                              ? 'border border-red-600 text-blue'
+                              ? 'border border-red text-blue'
                               : 'border border-green-600 text-blue'
                           }`}
                         >
