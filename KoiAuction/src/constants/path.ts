@@ -9,6 +9,9 @@ const path = {
   policy: '/policy',
   profile: '/profile',
   auctionHistory: '/auction-history',
+  admin: '/admin',
+  accountManagement: '/admin/account-management',
+  transactionManagement: '/admin/transaction-management',
   logout: '/logout'
 }
 

@@ -21,20 +21,12 @@ const AdminHome = () => {
   ]
 
   const chartData = {
-    labels: [
-      'Gói trải bài theo câu hỏi đơn',
-      'Gói trải bài theo chủ đề',
-      'Gói trải bài tổng quan tuần',
-      'Gói trải bài tổng quan tháng',
-      'Gói trải bài tổng quan quý',
-      'Gói trải bài tổng quan 6 tháng',
-      'Gói trải bài tổng quan năm'
-    ],
+    labels: ['Method 1', 'Method 2', 'Method 3', 'Method 4'],
     datasets: [
       {
-        data: [24, 28, 9, 21, 18, 18, 18],
-        backgroundColor: ['#FF4960', '#EDEF78', '#717DCC', '#5EE073', '#3A83F0', '#EF3CD2', '#FFB038'],
-        hoverBackgroundColor: ['#FF4960', '#EDEF78', '#717DCC', '#5EE073', '#3A83F0', '#EF3CD2', '#FFB038']
+        data: [20, 25, 32, 23],
+        backgroundColor: ['#FF4960', '#EDEF78', '#717DCC', '#5EE073'],
+        hoverBackgroundColor: ['#FF4960', '#EDEF78', '#717DCC', '#5EE073']
       }
     ]
   }
@@ -57,9 +49,9 @@ const AdminHome = () => {
           <div className='flex flex-col space-y-8'>
             <div className='bg-white shadow-lg rounded-lg p-10'>
               <div className='flex flex-col md:flex-row justify-between items-center mb-6'>
-                <h1 className='text-lg md:text-2xl font-bold text-blue mb-4 md:mb-0'>THỐNG KÊ DỊCH VỤ</h1>
+                <h1 className='text-lg md:text-2xl font-bold text-red mb-4 md:mb-0'>AUCTION STATISTIC</h1>
                 <div className='flex space-x-2'>
-                  <select className='text-blue border rounded px-2 py-1'>
+                  <select className='text-blue border rounded border-red px-2 py-1'>
                     <option value='1'>January</option>
                     <option value='2'>February</option>
                     <option value='3'>March</option>
@@ -73,7 +65,7 @@ const AdminHome = () => {
                     <option value='11'>November</option>
                     <option value='12'>December</option>
                   </select>
-                  <select className='text-blue border rounded px-2 py-1 border-blue'>
+                  <select className='text-blue border rounded px-2 py-1 border-red'>
                     <option>2023</option>
                     <option>2024</option>
                     <option>2025</option>
@@ -105,10 +97,10 @@ const AdminHome = () => {
             <div className='bg-white shadow-lg rounded-lg p-10'>
               <div className='flex flex-col md:flex-row justify-between items-center mb-20'>
                 <div className='mb-4 md:mb-0'>
-                  <h2 className='text-2xl font-bold text-blue'>TỔNG QUAN TÀI CHÍNH</h2>
+                  <h2 className='text-2xl font-bold text-red'>FINANCIAL OVERVIEW</h2>
                 </div>
                 <div className='flex space-x-2'>
-                  <select className='text-blue border rounded px-2 py-1 border-blue'>
+                  <select className='text-blue border rounded px-2 py-1 border-red'>
                     <option>2023</option>
                     <option>2024</option>
                     <option>2025</option>
