@@ -1,131 +1,62 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Koi } from '../../types/Koi.type'
 import Pagination from '../Pagination/Pagination'
+import http from '../../utils/http'
 
 export default function Auction() {
-  const koiList: Koi[] = [
-    {
-      id: 1,
-      name: 'Asagi',
-      code: '#Koi2412',
-      sex: 'Male',
-      reservePrice: '150,000 $',
-      age: 12,
-      variety: 'Doitsu',
-      timeLeft: '8h 30m 15s',
-      imageUrl:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
-    },
-    {
-      id: 2,
-      name: 'Kohaku',
-      code: '#Koi5234',
-      sex: 'Female',
-      reservePrice: '200,000 $',
-      age: 9,
-      variety: 'Kohaku',
-      timeLeft: '5h 12m 45s',
-      imageUrl:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
-    },
-    {
-      id: 3,
-      name: 'Sakura',
-      code: '#Koi1211',
-      sex: 'Male',
-      reservePrice: '180,000 $',
-      age: 10,
-      variety: 'Showa',
-      timeLeft: '12h 20m 00s',
-      imageUrl:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
-    },
-    {
-      id: 4,
-      name: 'Ameno',
-      code: '#Koi1211',
-      sex: 'Male',
-      reservePrice: '180,000 $',
-      age: 10,
-      variety: 'Kohaku',
-      timeLeft: '12h 20m 00s',
-      imageUrl:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
-    },
-    {
-      id: 5,
-      name: 'Fujika',
-      code: '#Koi1211',
-      sex: 'Male',
-      reservePrice: '180,000 $',
-      age: 10,
-      variety: 'Showa',
-      timeLeft: '12h 20m 00s',
-      imageUrl:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
-    },
-    {
-      id: 6,
-      name: 'Haniki',
-      code: '#Koi1211',
-      sex: 'Male',
-      reservePrice: '180,000 $',
-      age: 10,
-      variety: 'Huji',
-      timeLeft: '12h 20m 00s',
-      imageUrl:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
-    },
-    {
-      id: 7,
-      name: 'Asagi',
-      code: '#Koi1211',
-      sex: 'Male',
-      reservePrice: '180,000 $',
-      age: 10,
-      variety: 'Huji',
-      timeLeft: '12h 20m 00s',
-      imageUrl:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
-    },
-    {
-      id: 8,
-      name: 'Asagi',
-      code: '#Koi1211',
-      sex: 'Male',
-      reservePrice: '180,000 $',
-      age: 10,
-      variety: 'Huji',
-      timeLeft: '12h 20m 00s',
-      imageUrl:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
-    },
-    {
-      id: 9,
-      name: 'Benji',
-      code: '#Koi1211',
-      sex: 'Male',
-      reservePrice: '180,000 $',
-      age: 10,
-      variety: 'Huji',
-      timeLeft: '12h 20m 00s',
-      imageUrl:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
-    },
-    {
-      id: 10,
-      name: 'Killua',
-      code: '#Koi1211',
-      sex: 'Male',
-      reservePrice: '180,000 $',
-      age: 10,
-      variety: 'Huji',
-      timeLeft: '12h 20m 00s',
-      imageUrl:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
+  const [koiList, setKoiData] = useState<Koi[]>([])
+  const [isLoading, setLoading] = useState(true)
+  const [timeLeft, setTimeLeft] = useState<{ [id: number]: string }>({})
+  const fetchKoiData = async () => {
+    try {
+      setLoading(true)
+      const response = await http.get<{ message: string; value: Koi[] }>('Koi/all-active-auctions')
+      setKoiData(response.data.value || [])
+    } catch (error) {
+      console.error('Error fetching farm data:', error)
+      setKoiData([])
+    } finally {
+      setLoading(false)
     }
-  ]
+  }
 
+  const calculateTimeLeft = (endTime: string, startTime: string) => {
+    const end = new Date(endTime).getTime()
+    const start = new Date(startTime).getTime()
+    const now = Date.now()
+    const timeRemaining = end - Math.max(start, now)
+
+    if (timeRemaining <= 0) return 'Auction Ended'
+
+    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24))
+    const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60))
+    const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000)
+
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`
+  }
+  useEffect(() => {
+    fetchKoiData()
+  }, [])
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newTimeLeft = koiList.reduce(
+        (acc, koi) => {
+          if (koi.endTime && koi.startTime) {
+            acc[koi.id] = calculateTimeLeft(koi.endTime, koi.startTime)
+          } else {
+            acc[koi.id] = 'No time data'
+          }
+          return acc
+        },
+        {} as { [id: number]: string }
+      )
+
+      setTimeLeft(newTimeLeft)
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [koiList])
   const [searchName, setSearchName] = useState('')
   const [searchSex, setSearchSex] = useState('')
   const [searchVariety, setSearchVariety] = useState('')
@@ -202,31 +133,37 @@ export default function Auction() {
           </section>
 
           <div className='mt-20'>
-            <section className='grid md:grid-cols-2 gap-10'>
-              {currentKoi.length > 0 ? (
-                currentKoi.map((koi) => (
-                  <div key={koi.id} className='border rounded-lg overflow-hidden shadow-md flex p-5'>
-                    <img src={koi.imageUrl} alt={`${koi.name} Koi fish`} className='w-1/4 h-auto object-cover' />
-                    <div className='p-4 space-y-2 flex-1'>
-                      <p className='text-red font-medium'>Time Left: {koi.timeLeft}</p>
-                      <h3 className='text-xl font-bold'>Koi Name: {koi.name}</h3>
-                      <p>Code: {koi.code}</p>
-                      <p>Sex: {koi.sex}</p>
-                      <p>Reserve price: {koi.reservePrice}</p>
-                      <p>Age: {koi.age}</p>
-                      <p>Variety: {koi.variety}</p>
-                      <button className='mt-2 bg-red text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
-                        View
-                      </button>
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : (
+              <section className='grid md:grid-cols-2 gap-10'>
+                {currentKoi.length > 0 ? (
+                  currentKoi.map((koi) => (
+                    <div key={koi.id} className='border rounded-lg overflow-hidden shadow-md flex p-5'>
+                      <img src={koi.imageUrl} alt={`${koi.name} Koi fish`} className='w-1/4 h-auto object-cover' />
+                      <div className='p-4 space-y-2 flex-1'>
+                        <p className='text-red font-medium'>Time Left: {timeLeft[koi.id] || 'Calculating...'}</p>
+                        <h3 className='text-xl font-bold'>Koi Name: {koi.name}</h3>
+                        <p>Size: {koi.size}</p>
+                        <p>Sex: {koi.sex}</p>
+                        <p>Reserve price: {koi.initialPrice}</p>
+                        <p>Age: {koi.age}</p>
+                        <p>Variety: {koi.variety}</p>
+                        <button className='mt-2 bg-red text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
+                          View
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <p>No Koi found matching your search criteria.</p>
-              )}
-            </section>
+                  ))
+                ) : (
+                  <p>No Koi found matching your search criteria.</p>
+                )}
+              </section>
+            )}
 
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+            {!isLoading && (
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+            )}
           </div>
         </main>
       </div>

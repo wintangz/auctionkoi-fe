@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Pagination from '../Pagination/Pagination'
 import { Blog } from '../../types/Blog.type'
+import http from '../../utils/http'
 
 export default function Blogs() {
   const [blogPosts, setBlogPosts] = useState<Blog[]>([])
@@ -11,9 +12,8 @@ export default function Blogs() {
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
-        const response = await fetch('https://6706402ba0e04071d2260d4e.mockapi.io/koiauction/blogs')
-        const data = await response.json()
-        setBlogPosts(data)
+        const response = await http.get<{ message: string; value: Blog[] }>('Blog/get-all-Blogs')
+        setBlogPosts(response.data.value)
       } catch (error) {
         console.error('Error fetching blog posts:', error)
       } finally {
@@ -65,19 +65,30 @@ export default function Blogs() {
           </p>
 
           <div className='grid md:grid-cols-2 gap-6 mb-6 lg:mt-20 mt-10'>
-            {currentPosts.map((post) => (
-              <article key={post.id} className='border border-gray-200 rounded-lg overflow-hidden'>
-                <img src={post.image} alt={post.title} className='w-full h-auto object-cover' />
-                <div className='p-4'>
-                  <h3 className='text-lg font-semibold mb-2'>{post.title}</h3>
-                  <p className='text-sm text-gray-600 mb-2'>{post.postedDate}</p>
-                  <p className='mb-4'>{post.content}</p>
-                  <a href='#' className='text-red-600 hover:underline'>
-                    Read More »
-                  </a>
-                </div>
-              </article>
-            ))}
+            {currentPosts.map((post) => {
+              const postedDate = new Date(post.postedDate)
+              const date = postedDate.toLocaleDateString()
+              const time = postedDate.toLocaleTimeString()
+
+              return (
+                <article key={post.id} className='border border-gray-200 rounded-lg overflow-hidden'>
+                  <img
+                    src={post.urlImage}
+                    alt={post.title}
+                    className='w-full h-48 object-cover' // Set a fixed height and ensure consistent aspect ratio
+                  />
+                  <div className='p-4'>
+                    <h3 className='text-lg font-semibold mb-2'>{post.title}</h3>
+                    <p className='text-sm text-gray-600 mb-2'>{date}</p>
+                    <p className='text-sm text-gray-600 mb-2'>{time}</p>
+                    <p className='mb-4'>{post.content}</p>
+                    <a href='#' className='text-red-600 hover:underline'>
+                      Read More »
+                    </a>
+                  </div>
+                </article>
+              )
+            })}
           </div>
 
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />

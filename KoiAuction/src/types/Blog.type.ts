@@ -2,6 +2,6 @@ export type Blog = {
   id: number
   title: string
   content: string
-  image: string
+  urlImage: string
   postedDate: string
 }
