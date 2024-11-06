@@ -1,8 +1,10 @@
 import './index.scss'
-import { useState } from 'react' // Import useState
+import { useEffect, useState } from 'react' // Import useState
 import ImageUpload from '../../components/UploadImage'
 import { Button, Form, Input, Modal } from 'antd'
 import TabNavigation from '../../components/TagNavigation'
+import { User } from '../../types/User.type'
+import http from '../../utils/http'
 
 function Profile() {
   const [activeItem, setActiveItem] = useState('account')
@@ -11,38 +13,55 @@ function Profile() {
   const handleItemClick = (item: any) => {
     setActiveItem(item)
   }
-  // Lưu trữ thông tin người dùng trong state
-  const [userInfo, setUserInfo] = useState({
-    username: 'Junnie',
-    fullName: 'NLHD',
-    email: 'Junnie@gmail.com',
-    phone: '0123123123',
-    address: '221B Baker Street, London'
-  })
+  const [loading, setLoading] = useState(true)
+  const [userInfo, setUserInfo] = useState<User | null>(null)
+  const fetchFarmData = async () => {
+    try {
+      setLoading(true)
+      const response = await http.get<{ message: string; value: User }>('User/get-current-user')
+      setUserInfo(response.data.value || null)
+    } catch (error) {
+      console.error('Error fetching farm data:', error)
+      setUserInfo(null)
+    } finally {
+      setLoading(false)
+    }
+  }
 
+  useEffect(() => {
+    fetchFarmData()
+  }, [])
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   const showModal = () => {
-    // Set lại giá trị của form với thông tin người dùng hiện tại
-    form.setFieldsValue({
-      fullName: userInfo.fullName,
-      phone: userInfo.phone,
-      address: userInfo.address
-    })
-    setIsModalVisible(true)
+    if (userInfo) {
+      form.setFieldsValue({
+        fullName: userInfo.fullName,
+        phone: userInfo.phone,
+        address: userInfo.address
+      })
+      setIsModalVisible(true)
+    }
+  }
+
+  if (loading || !userInfo) {
+    return <div>Loading...</div>
   }
 
   const handleOk = () => {
     form
       .validateFields()
       .then((values) => {
-        // Cập nhật thông tin người dùng
-        setUserInfo((prev) => ({
-          ...prev,
-          fullName: values.fullName,
-          phone: values.phone,
-          address: values.address
-        }))
+        setUserInfo((prev) =>
+          prev
+            ? {
+                ...prev,
+                fullName: values.fullName,
+                phone: values.phone,
+                address: values.address
+              }
+            : null
+        )
         setIsModalVisible(false)
       })
       .catch((info) => {
@@ -64,7 +83,6 @@ function Profile() {
           <ImageUpload />
         </div>
         <div className='profile__bottom__info'>
-          {/* Hiển thị đầy đủ thông tin người dùng */}
           <div className='info-item'>
             <span>Username:</span> <span>{userInfo.username}</span>
           </div>
@@ -81,14 +99,12 @@ function Profile() {
             <span>Address:</span> <span>{userInfo.address}</span>
           </div>
 
-          {/* Nút chỉnh sửa */}
           <div style={{ display: 'flex', justifyContent: 'flex-end', width: '80%' }}>
             <Button type='primary' danger onClick={showModal}>
               Edit Profile
             </Button>
           </div>
 
-          {/* Modal để chỉnh sửa chỉ 3 thông tin FullName, Phone, Address */}
           <Modal title='Edit Profile' visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
             <Form form={form} layout='vertical' name='editProfileForm'>
               <Form.Item

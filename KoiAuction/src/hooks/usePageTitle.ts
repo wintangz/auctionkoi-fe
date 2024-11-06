@@ -16,7 +16,12 @@ export function usePageTitle() {
       [path.farms]: 'Farms - KoiAuction',
       [path.policy]: 'Policy - KoiAuction',
       [path.profile]: 'Profile - KoiAuction',
-      [path.auctionHistory]: 'Auction History - KoiAuction'
+      [path.auctionHistory]: 'Auction History - KoiAuction',
+      [path.createAuction]: 'Create Auction - KoiAuction',
+      [path.method1]: 'Fixed Price Sale - KoiAuction',
+      [path.method2]: 'Sealed Bid Auction - KoiAuction',
+      [path.method2]: 'Ascending Bid Auction - KoiAuction',
+      [path.method3]: 'Descending Bid Auction - KoiAuction'
     }
 
     const title = pathToTitleMap[location.pathname] || 'KoiAuction'

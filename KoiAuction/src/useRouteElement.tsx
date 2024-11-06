@@ -23,6 +23,7 @@ import Method4Page from './pages/MethodPage/Method4Page/Method4Page'
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import AdminHome from './pages/AdminPage/HomePage/AdminHome'
 import AdminAccountManagement from './pages/AdminPage/AccountManagementPage/AdminAccountManagement'
+import BreederRegisterPage from './pages/BreederRegisterPage/BreederRegisterPage'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -201,6 +202,14 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <Method4Page />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/register-breeder',
+      element: (
+        <MainLayout>
+          <BreederRegisterPage />
         </MainLayout>
       )
     }
