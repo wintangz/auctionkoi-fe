@@ -17,20 +17,17 @@ export function usePageTitle() {
       [path.policy]: 'Policy - KoiAuction',
       [path.profile]: 'Profile - KoiAuction',
       [path.auctionHistory]: 'Auction History - KoiAuction',
-<<<<<<< HEAD
       [path.createAuction]: 'Create Auction - KoiAuction',
       [path.method1]: 'Fixed Price Sale - KoiAuction',
       [path.method2]: 'Sealed Bid Auction - KoiAuction',
       [path.method2]: 'Ascending Bid Auction - KoiAuction',
-      [path.method3]: 'Descending Bid Auction - KoiAuction'
-=======
+      [path.method3]: 'Descending Bid Auction - KoiAuction',
       [path.admin]: 'Auction - Admin',
       [path.accountManagement]: 'Account Management - Admin',
       [path.transactionManagement]: 'Transaction Management - Admin',
       [path.auctionRequest]: 'Auction Request - Staff',
       [path.auctionRequestDetail]: 'Auction Request Detail - Staff',
       [path.koibreederRequest]: 'Koi Breeder Request - Staff'
->>>>>>> 86d3d1bda3005939e01af59ab72d7d02fdf2ae0a
     }
 
     const title = pathToTitleMap[location.pathname] || 'KoiAuction'

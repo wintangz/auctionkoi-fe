@@ -22,15 +22,12 @@ import Method4Page from './pages/MethodPage/Method4Page/Method4Page'
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import AdminHome from './pages/AdminPage/HomePage/AdminHome'
 import AdminAccountManagement from './pages/AdminPage/AccountManagementPage/AdminAccountManagement'
-<<<<<<< HEAD
 import BreederRegisterPage from './pages/BreederRegisterPage/BreederRegisterPage'
-=======
 import AdminTransactionManagement from './pages/AdminPage/TransactionManagementPage/AdminTransactionManagement'
 import StaffLayout from './layouts/StaffLayout/StaffLayout'
 import StaffAuctionRequest from './pages/StaffPage/AuctionRequestPage/StaffAuctionRequest'
 import StaffKoiBreederRequest from './pages/StaffPage/KoiBreederRequestPage/StaffKoiBreederRequest'
 import StaffAuctionRequestDetail from './pages/StaffPage/AuctionRequestDetailPage/StaffAuctionRequestDetail'
->>>>>>> 86d3d1bda3005939e01af59ab72d7d02fdf2ae0a
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
