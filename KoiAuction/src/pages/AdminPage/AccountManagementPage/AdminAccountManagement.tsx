@@ -72,21 +72,20 @@ export default function AdminAccountManagement() {
   const confirmDelete = async () => {
     if (currentUser) {
       try {
-        const response = await fetch(
-          `https://exestarotapi20241007212754.azurewebsites.net/api/v1/user/${currentUser.id}`,
+        const token = localStorage.getItem('access_token') || ''
+        const response = await axios.delete(
+          `https://koiauctionwebapp.azurewebsites.net/api/User/delete-user-by-manager/${currentUser.id}`,
           {
-            method: 'DELETE'
+            headers: {
+              Authorization: token
+            }
           }
         )
-
-        if (response.ok) {
-          const updatedUsers = users.filter((user) => user.id !== currentUser.id)
-          setUsers(updatedUsers)
+        if (response.status === 200) {
+          setUsers(users.filter((user) => user.id !== currentUser.id))
           setDeleteModalOpen(false)
           setCurrentUser(null)
           toast.success('User deleted successfully!')
-        } else {
-          toast.error('Failed to delete user.')
         }
       } catch (error) {
         console.error('Error deleting user:', error)
@@ -111,7 +110,7 @@ export default function AdminAccountManagement() {
       <div className='min-h-screen pb-16 lg:px-0 px-5'>
         <main className='container mx-auto mt-20 p-6 bg-white rounded-lg shadow-lg lg:p-16'>
           <div className='flex flex-col lg:flex-row justify-between mb-6 lg:space-x-4'>
-            <h1 className='text-2xl font-bold text-indigo-700 mb-6'>QUẢN LÍ TÀI KHOẢN</h1>
+            <h1 className='text-2xl font-bold text-red mb-6'>QUẢN LÍ TÀI KHOẢN</h1>
             <div className='flex flex-col md:flex-row justify-between mb-4 space-y-4 md:space-y-0'>
               <div className='relative lg:mr-5 mr-0'>
                 <input
@@ -209,9 +208,10 @@ export default function AdminAccountManagement() {
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-blue'>
                       <span
                         className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                      ${user.role === 'Admin' ? 'border border-blue text-blue-500' : ''}
-                      ${user.role === 'Customer' ? 'border border-green-500 text-green-500' : ''}
-                      ${user.role === 'Reader' ? 'border border-pink-500 text-pink-500' : ''}`}
+                      ${user.role === 'MANAGER' ? 'border border-blue-500 text-blue-500' : ''}
+                      ${user.role === 'CUSTOMER' ? 'border border-green-500 text-green-500' : ''}
+                      ${user.role === 'KOIBREEDER' ? 'border border-pink-500 text-pink-500' : ''}
+                      ${user.role === 'STAFF' ? 'border border-yellow-400 text-yellow-400' : ''}`}
                       >
                         {user.role}
                       </span>
@@ -227,13 +227,13 @@ export default function AdminAccountManagement() {
                         {activeDropdown === user.id && (
                           <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200'>
                             <button
-                              className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                              className='block w-full text-left px-4 py-2 text-sm text-blue-500 hover:bg-gray-100'
                               onClick={() => handleEditUser(user)}
                             >
                               Edit
                             </button>
                             <button
-                              className='block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100'
+                              className='block w-full text-left px-4 py-2 text-sm text-red hover:bg-gray-100'
                               onClick={() => handleDeleteUser(user)}
                             >
                               Delete
@@ -278,60 +278,17 @@ export default function AdminAccountManagement() {
                     className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
                   />
                 </div>
-                <div>
-                  <label htmlFor='phone' className='block text-sm font-medium text-gray-700 mb-1'>
-                    Phone
-                  </label>
-                  <input
-                    id='phone'
-                    type='tel'
-                    value={currentUser.phone}
-                    onChange={(e) => setCurrentUser({ ...currentUser, phone: e.target.value })}
-                    className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
-                  />
-                </div>
-                <div>
-                  <label htmlFor='gender' className='block text-sm font-medium text-gray-700 mb-1'>
-                    Gender
-                  </label>
-                  <select
-                    id='gender'
-                    value={currentUser.gender}
-                    onChange={(e) => setCurrentUser({ ...currentUser, gender: e.target.value })}
-                    className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
-                  >
-                    <option value='Male'>Male</option>
-                    <option value='Female'>Female</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor='role' className='block text-sm font-medium text-gray-700 mb-1'>
-                    Role
-                  </label>
-                  <select
-                    id='role'
-                    value={currentUser.role}
-                    onChange={(e) => setCurrentUser({ ...currentUser, role: e.target.value })}
-                    className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
-                  >
-                    <option value='Admin'>Admin</option>
-                    <option value='Customer'>Customer</option>
-                    <option value='Reader'>Reader</option>
-                  </select>
-                </div>
-              </div>
-              <div className='mt-6 flex justify-end space-x-2'>
-                <button
-                  onClick={() => setEditModalOpen(false)}
-                  className='px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500'
-                >
-                  Cancel
-                </button>
                 <button
                   onClick={confirmEdit}
-                  className='px-4 py-2  bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'
+                  className='w-full bg-blue-500 text-white py-2 rounded-md mt-4 hover:bg-blue-600 transition duration-200'
                 >
-                  Save changes
+                  Confirm Edit
+                </button>
+                <button
+                  onClick={() => setEditModalOpen(false)}
+                  className='w-full bg-gray-300 text-gray-700 py-2 rounded-md mt-2 hover:bg-gray-400 transition duration-200'
+                >
+                  Cancel
                 </button>
               </div>
             </div>
@@ -352,7 +309,7 @@ export default function AdminAccountManagement() {
                 </button>
                 <button
                   onClick={confirmDelete}
-                  className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500'
+                  className='px-4 py-2 bg-red text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500'
                 >
                   Delete
                 </button>

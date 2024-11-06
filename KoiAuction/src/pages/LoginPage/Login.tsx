@@ -32,8 +32,10 @@ export default function Login() {
         setIsAuthenticated(true)
         const role = localStorage.getItem('roles') || ''
         const isManager = role === 'MANAGER'
+        const isStaff = role === 'STAFF'
         console.log(role)
         if (isManager) nagivate('/admin')
+        else if (isStaff) nagivate('/staff')
         else nagivate('/')
       },
       onError: (error) => {

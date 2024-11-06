@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppContext } from '../../contexts/app.context'
 
-const AdminHeader: React.FC = () => {
+const StaffHeader: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { logout } = useContext(AppContext)
@@ -23,26 +23,21 @@ const AdminHeader: React.FC = () => {
     }
   }, [])
 
-  // if (!admin) {
-  //   return null
-  // }
-
   const handleLogout = () => {
     logout()
     navigate('/login')
   }
 
   const menuItems = [
-    { title: 'AUCTION', href: '/admin' },
-    { title: 'ACOUNT MANAGEMENT', href: '/admin/account-management' },
-    { title: 'TRANSACTION MANAGEMENT', href: '/admin/transaction-management' }
+    { title: 'AUCTION REQUEST', href: '/staff' },
+    { title: 'KOI BREEDER REQUEST', href: '/staff/koibreeder-request' }
   ]
 
   return (
     <header>
       <div className='container mx-auto px-4 py-4 flex justify-between items-center'>
         <div className='flex items-center space-x-8'>
-          <Link to='/admin' className='flex items-center space-x-2'>
+          <Link to='/staff' className='flex items-center space-x-2'>
             <img
               src='https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/Logo.png?alt=media&token=e71cfc51-da8e-4bea-8619-2e64177ee62a'
               alt='Logo'
@@ -130,4 +125,4 @@ const AdminHeader: React.FC = () => {
   )
 }
 
-export default AdminHeader
+export default StaffHeader

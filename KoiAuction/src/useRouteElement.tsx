@@ -6,7 +6,6 @@ import MainLayout from './layouts/MainLayout'
 import Auction from './components/Auction/Auction'
 import Blogs from './components/Blogs/Blogs'
 import AboutUs from './components/AboutUs/AboutUs'
-
 import { usePageTitle } from './hooks/usePageTitle'
 import Policy from './pages/PolicyPage/Policy'
 import Profile from './pages/ProfilePage'
@@ -23,7 +22,15 @@ import Method4Page from './pages/MethodPage/Method4Page/Method4Page'
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import AdminHome from './pages/AdminPage/HomePage/AdminHome'
 import AdminAccountManagement from './pages/AdminPage/AccountManagementPage/AdminAccountManagement'
+<<<<<<< HEAD
 import BreederRegisterPage from './pages/BreederRegisterPage/BreederRegisterPage'
+=======
+import AdminTransactionManagement from './pages/AdminPage/TransactionManagementPage/AdminTransactionManagement'
+import StaffLayout from './layouts/StaffLayout/StaffLayout'
+import StaffAuctionRequest from './pages/StaffPage/AuctionRequestPage/StaffAuctionRequest'
+import StaffKoiBreederRequest from './pages/StaffPage/KoiBreederRequestPage/StaffKoiBreederRequest'
+import StaffAuctionRequestDetail from './pages/StaffPage/AuctionRequestDetailPage/StaffAuctionRequestDetail'
+>>>>>>> 86d3d1bda3005939e01af59ab72d7d02fdf2ae0a
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -37,6 +44,15 @@ function AdminProtectedRoute() {
   const isManager = role === 'MANAGER'
 
   return isAuthenticated && isManager ? <Outlet /> : <Navigate to='/login' />
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+function StaffProtectedRoute() {
+  const { isAuthenticated } = useContext(AppContext)
+  const role = localStorage.getItem('roles') || ''
+  const isStaff = role === 'STAFF'
+
+  return isAuthenticated && isStaff ? <Outlet /> : <Navigate to='/login' />
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -75,6 +91,44 @@ export default function useRouteElement() {
             <AdminLayout>
               <AdminAccountManagement />
             </AdminLayout>
+          )
+        },
+        {
+          path: '/admin/transaction-management',
+          element: (
+            <AdminLayout>
+              <AdminTransactionManagement />
+            </AdminLayout>
+          )
+        }
+      ]
+    },
+    {
+      path: '',
+      element: <StaffProtectedRoute />,
+      children: [
+        {
+          path: '/staff',
+          element: (
+            <StaffLayout>
+              <StaffAuctionRequest />
+            </StaffLayout>
+          )
+        },
+        {
+          path: '/staff/auction-request-detail',
+          element: (
+            <StaffLayout>
+              <StaffAuctionRequestDetail />
+            </StaffLayout>
+          )
+        },
+        {
+          path: '/staff/koibreeder-request',
+          element: (
+            <StaffLayout>
+              <StaffKoiBreederRequest />
+            </StaffLayout>
           )
         }
       ]
