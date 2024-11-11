@@ -35,7 +35,7 @@ export default function AdminAccountManagement() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<(typeof users)[0] | null>(null)
 
-  const filteredUsers = users.filter((user) => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredUsers = users.filter((user) => user.userName.toLowerCase().includes(searchTerm.toLowerCase()))
 
   const toggleDropdown = (id: string) => {
     setActiveDropdown(activeDropdown === id ? null : id)
@@ -192,7 +192,7 @@ export default function AdminAccountManagement() {
                           />
                         </div>
                         <div className='ml-4'>
-                          <div className='text-sm font-medium text-gray-900'>{user.username}</div>
+                          <div className='text-sm font-medium text-gray-900'>{user.userName}</div>
                         </div>
                       </div>
                     </td>
@@ -261,8 +261,8 @@ export default function AdminAccountManagement() {
                   <input
                     id='name'
                     type='text'
-                    value={currentUser.username}
-                    onChange={(e) => setCurrentUser({ ...currentUser, username: e.target.value })}
+                    value={currentUser.userName}
+                    onChange={(e) => setCurrentUser({ ...currentUser, userName: e.target.value })}
                     className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
                   />
                 </div>

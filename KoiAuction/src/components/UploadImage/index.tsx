@@ -6,13 +6,15 @@ import ReactModal from 'react-modal'
 import './index.scss'
 import { toast } from 'react-toastify'
 import getCroppedImg from '../../configs/cropImage'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { storage } from '../../configs/firebase.config'
 
-ReactModal.setAppElement('#root') // Đảm bảo rằng bạn đã có ID 'root' trong HTML
-
+ReactModal.setAppElement('#root')
 interface ImageUploadProps {
-  imgUrl?: string | null // Định nghĩa prop imgUrl
+  imgUrl?: string | null
+  onImageSave: (imageUrl: string) => Promise<void>
 }
-const ImageUpload: React.FC<ImageUploadProps> = ({ imgUrl }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ imgUrl, onImageSave }) => {
   const [image, setImage] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
@@ -26,14 +28,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imgUrl }) => {
   const [croppedImage, setCroppedImage] = useState<string | null>(null)
   const [isCropping, setIsCropping] = useState<boolean>(false)
   const [isUploading, setIsUploading] = useState<boolean>(false)
-  // Thêm state để xác nhận vùng cắt
+
   const [isSaved, setIsSaved] = useState<boolean>(false)
   const handleCancel = () => {
-    setCroppedImage(null) // Reset ảnh cắt
-    setImage(null) // Reset ảnh hiện tại
-    setFile(null) // Reset file
-    setIsCropping(false) // Đóng modal
-    setIsSaved(false) // Đánh dấu là ảnh chưa được lưu
+    setCroppedImage(null)
+    setImage(null)
+    setFile(null)
+    setIsCropping(false)
+    setIsSaved(false)
   }
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0]
@@ -43,7 +45,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imgUrl }) => {
         setImage(reader.result as string)
         setFile(selectedFile)
         setIsCropping(true)
-        // Đặt lại trạng thái cắt ảnh
+
         setCroppedImage(null)
         setCroppedAreaPixels(null)
         setCrop({ x: 0, y: 0 })
@@ -82,18 +84,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imgUrl }) => {
     if (croppedImage && file) {
       setIsUploading(true)
       try {
-        // console.log('Đang upload ảnh...')
-        // const response = await fetch(croppedImage)
-        // const blob = await response.blob()
-
-        // const storageRef = ref(storage, `images/${file.name}`)
-        // const snapshot = await uploadBytes(storageRef, blob)
-        // const downloadURL = await getDownloadURL(snapshot.ref)
-
-        // Gửi link tới API để lưu vào database
-        // await api.put('Account/update-profile', JSON.stringify(downloadURL))
-        setIsUploading(false)
-        toast.success('Ảnh đã được lưu thành công!')
+        const croppedImageBlob = await fetch(croppedImage).then((res) => res.blob())
+        const fileName = `${file.name}-${Date.now()}`
+        const storageRef = ref(storage, `images/${fileName}`)
+        await uploadBytes(storageRef, croppedImageBlob)
+        const firebaseUrl = await getDownloadURL(storageRef)
+        console.log(firebaseUrl)
+        await onImageSave(firebaseUrl)
         setIsSaved(true)
       } catch {
         toast.error('Có lỗi xảy ra khi upload ảnh. Vui lòng thử lại.')
@@ -112,18 +109,18 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imgUrl }) => {
         className='image-upload-input'
       />
 
+      {/* Hiển thị ảnh ban đầu từ imgUrl nếu chưa có ảnh cropped */}
       {!isCropping && (
         <div
           className='upload-circle'
           onClick={() => {
-            console.log('Vòng tròn được nhấp')
             document.getElementById('image-upload')?.click()
           }}
           style={{
-            backgroundImage: croppedImage ? `url(${croppedImage})` : imgUrl ? `url(${imgUrl})` : undefined // Sử dụng imgUrl nếu không có croppedImage
+            backgroundImage: croppedImage ? `url(${croppedImage})` : imgUrl ? `url(${imgUrl})` : undefined
           }}
         >
-          {!croppedImage && <div className='placeholder' />}
+          {!croppedImage && !imgUrl && <div className='placeholder' />}
         </div>
       )}
 
@@ -136,13 +133,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imgUrl }) => {
       >
         <div className='cropper-container'>
           <div className='cropper-header'>
-            <button
-              onClick={() => {
-                console.log('Nút Cắt Ảnh được nhấn')
-                showCroppedImage()
-              }}
-              className='crop-button'
-            >
+            <button onClick={showCroppedImage} className='crop-button'>
               Cắt Ảnh
             </button>
           </div>
@@ -159,15 +150,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imgUrl }) => {
             onCropComplete={onCropComplete}
           />
 
-          {/* Thêm div chứa nút xác nhận */}
           <div className='cropper-footer'>
-            <button
-              onClick={() => {
-                console.log('Nút Xác Nhận được nhấn')
-                showCroppedImage() // Gọi hàm để cắt ảnh
-              }}
-              className='confirm-button'
-            >
+            <button onClick={showCroppedImage} className='confirm-button'>
               Xác Nhận
             </button>
           </div>
@@ -177,10 +161,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imgUrl }) => {
       {croppedImage && !isSaved && (
         <div className='button-container'>
           <button onClick={handleSave} className='save-button' disabled={isUploading}>
-            {isUploading ? 'Đang lưu...' : 'Lưu'}
+            {isUploading ? 'Load...' : 'Save'}
           </button>
           <button onClick={handleCancel} className='cancel-button'>
-            Hủy
+            Cancel
           </button>
         </div>
       )}

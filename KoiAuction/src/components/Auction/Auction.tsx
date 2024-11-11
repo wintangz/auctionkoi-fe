@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Koi } from '../../types/Koi.type'
 import Pagination from '../Pagination/Pagination'
 import http from '../../utils/http'
+import { Link } from 'react-router-dom'
 
 export default function Auction() {
   const [koiList, setKoiData] = useState<Koi[]>([])
@@ -149,8 +150,9 @@ export default function Auction() {
                         <p>Reserve price: {koi.initialPrice}</p>
                         <p>Age: {koi.age}</p>
                         <p>Variety: {koi.variety}</p>
+
                         <button className='mt-2 bg-red text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
-                          View
+                          <Link to={`/auction-detail/${koi.id}`}>View</Link>
                         </button>
                       </div>
                     </div>

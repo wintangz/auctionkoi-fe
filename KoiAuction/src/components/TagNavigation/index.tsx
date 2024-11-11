@@ -1,27 +1,27 @@
 import accountImg from '../../assets/img/account.png'
 import changePasswordImg from '../../assets/img/changepassword.png'
 import historyImg from '../../assets/img/history.png'
-import { useNavigate } from 'react-router-dom' // Sử dụng React Router cho điều hướng
+import { useNavigate } from 'react-router-dom'
 import './index.scss'
 interface TabNavigationProps {
-  activeItem: string // Kiểu dữ liệu cho activeItem
-  handleItemClick: (item: string) => void // Kiểu dữ liệu cho handleItemClick
+  activeItem: string
+  handleItemClick: (item: string) => void
 }
 
 const TabNavigation: React.FC<TabNavigationProps> = ({ activeItem, handleItemClick }) => {
   const navigate = useNavigate()
 
   const handleNavigation = (item: string) => {
-    handleItemClick(item) // Cập nhật active item trước
+    handleItemClick(item)
     switch (item) {
       case 'account':
-        navigate('/profile') // Điều hướng đến trang Account
+        navigate('/profile')
         break
       case 'changePassword':
-        navigate('/change-password') // Điều hướng đến trang Change Password
+        navigate('/change-password')
         break
       case 'auctionHistory':
-        navigate('/auction-history') // Điều hướng đến trang Auction History
+        navigate('/auction-history')
         break
       default:
         break

@@ -4,9 +4,10 @@ import './CreateAuctionMethod.scss'
 interface CreateAuctionMethodProps {
   description: string
   onSubmit: (data: any) => void
+  imfUrl?: string
 }
 
-function CreateAuctionMethod({ description, onSubmit }: CreateAuctionMethodProps) {
+function CreateAuctionMethod({ description, onSubmit, imfUrl }: CreateAuctionMethodProps) {
   const [koiImage, setKoiImage] = useState<string | null>(null)
   const [koiName, setKoiName] = useState('')
   const [reservePrice, setReservePrice] = useState('')
@@ -42,7 +43,7 @@ function CreateAuctionMethod({ description, onSubmit }: CreateAuctionMethodProps
   return (
     <div className='method1-page'>
       <div className='banner'>
-        <img width='30%' src='https://i.imgur.com/c3GfyfI.png' alt='Banner' />
+        <img width='30%' src={imfUrl} alt='Banner' />
       </div>
       <div className='auction-form-container'>
         <form className='auction-form' onSubmit={handleSubmit}>
@@ -77,7 +78,7 @@ function CreateAuctionMethod({ description, onSubmit }: CreateAuctionMethodProps
           </label>
           <label>
             <span>Koi Image:</span>
-            <input type='file' accept='image/*' onChange={handleImageChange} /> {/* Cho phép tải ảnh lên */}
+            <input type='file' accept='image/*' onChange={handleImageChange} />
           </label>
 
           {koiImage && (

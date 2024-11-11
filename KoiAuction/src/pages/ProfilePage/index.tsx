@@ -1,10 +1,11 @@
 import './index.scss'
-import { useEffect, useState } from 'react' // Import useState
+import { useEffect, useState } from 'react'
 import ImageUpload from '../../components/UploadImage'
 import { Button, Form, Input, Modal } from 'antd'
 import TabNavigation from '../../components/TagNavigation'
 import { User } from '../../types/User.type'
 import http from '../../utils/http'
+import { toast } from 'react-toastify'
 
 function Profile() {
   const [activeItem, setActiveItem] = useState('account')
@@ -38,7 +39,7 @@ function Profile() {
     if (userInfo) {
       form.setFieldsValue({
         fullName: userInfo.fullName,
-        phone: userInfo.phone,
+        phone: userInfo.phoneNumber,
         address: userInfo.address
       })
       setIsModalVisible(true)
@@ -52,18 +53,38 @@ function Profile() {
   const handleOk = () => {
     form
       .validateFields()
-      .then((values) => {
-        setUserInfo((prev) =>
-          prev
-            ? {
-                ...prev,
-                fullName: values.fullName,
-                phone: values.phone,
-                address: values.address
-              }
-            : null
-        )
-        setIsModalVisible(false)
+      .then(async (values) => {
+        const requestBody = {
+          userName: userInfo?.userName,
+          email: userInfo?.email,
+          fullName: values.fullName,
+          address: values.address,
+          phoneNumber: values.phone
+        }
+
+        try {
+          const response = await http.put<{ message: string; value: User }>(
+            'User/update-current-user-info',
+            requestBody
+          )
+          setUserInfo((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  fullName: values.fullName,
+                  address: values.address,
+                  phoneNumber: values.phone
+                }
+              : null
+          )
+
+          toast.success(response.data.message)
+
+          setIsModalVisible(false)
+        } catch (error) {
+          console.error('Lỗi khi cập nhật thông tin người dùng:', error)
+          toast.error('Cập nhật thông tin người dùng thất bại')
+        }
       })
       .catch((info) => {
         console.log('Validation Failed:', info)
@@ -74,6 +95,17 @@ function Profile() {
     setIsModalVisible(false)
   }
 
+  const handleSaveImage = async (imageUrl: string) => {
+    try {
+      const response = await http.put<{ message: string; value: User }>('User/update-current-user-avatar', {
+        urlAvatar: imageUrl
+      })
+      toast.success(response.data.message)
+      console.log('Link ảnh đã được lưu thành công:', imageUrl)
+    } catch (error) {
+      console.error('Lỗi khi lưu link ảnh:', error)
+    }
+  }
   return (
     <div className='profile'>
       <div className='profile__top'>
@@ -81,11 +113,11 @@ function Profile() {
       </div>
       <div className='profile__bottom'>
         <div className='profile__bottom__img'>
-          <ImageUpload />
+          <ImageUpload onImageSave={handleSaveImage} imgUrl={userInfo.urlAvatar} />
         </div>
         <div className='profile__bottom__info'>
           <div className='info-item'>
-            <span>Username:</span> <span>{userInfo.username}</span>
+            <span>Username:</span> <span>{userInfo.userName}</span>
           </div>
           <div className='info-item'>
             <span>Full Name:</span> <span>{userInfo.fullName}</span>
@@ -94,7 +126,7 @@ function Profile() {
             <span>Email:</span> <span>{userInfo.email}</span>
           </div>
           <div className='info-item'>
-            <span>Phone:</span> <span>{userInfo.phone}</span>
+            <span>Phone:</span> <span>{userInfo.phoneNumber}</span>
           </div>
           <div className='info-item'>
             <span>Address:</span> <span>{userInfo.address}</span>

@@ -54,21 +54,20 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
-  position: absolute; /* Để đảm bảo nó ở dưới cùng */
-  bottom: 10px; /* Khoảng cách từ đáy modal */
-  left: 50%; /* Đưa về giữa */
-  transform: translateX(-50%); /* Điều chỉnh để căn giữa chính xác */
-  width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng */
+  position: absolute; 
+  bottom: 10px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  width: 100%;
 }
 
 .confirm-button {
   background: linear-gradient(90deg, rgba(255, 210, 250, 1) 24%, rgba(182, 225, 241, 1) 100%);
-  color: black; /* Màu chữ */
-  border: none; /* Bỏ viền */
-  padding: 10px 20px; /* Padding */
-  cursor: pointer; /* Con trỏ khi hover */
-  border-radius: 5px; /* Bo góc */
-  font-size: 20px;
+  color: black; 
+  border: none; 
+  padding: 10px 20px; 
+  cursor: pointer; 
+  border-radius: 5px; 
 }
 
 .confirm-button:hover {

@@ -209,7 +209,7 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/auction-detail',
+      path: '/auction-detail/:id',
       element: (
         <MainLayout>
           <AuctionDetailPage />
