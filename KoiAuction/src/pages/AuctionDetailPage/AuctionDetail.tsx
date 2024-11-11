@@ -1,41 +1,116 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useParams } from 'react-router-dom'
 import AuctionPage from '../../components/AuctionDetail/AuctionDetail'
+import http from '../../utils/http'
+import { useEffect, useState } from 'react'
+import { AuctionInfo, Bidder, FishDetails } from '../../types/AuctionDetailProps'
 
 function AuctionDetailPage() {
-  const auctionData = {
-    fishDetails: {
-      name: 'Asagi #Koi2412',
-      variety: 'Doitsu',
-      mainImage:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b',
-      thumbnails: [
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b',
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b'
-      ],
-      location: 'Littlehampton',
-      size: '15cm',
-      breeder: 'Junnie',
-      age: '1',
-      deliveryInfo: 'At cost (approx £30) Multiple fish can go in one box',
-      contact: '01903 724880'
-    },
-    auctionInfo: {
-      reservePrice: 100,
-      startingBid: 150,
-      timeLeft: '8h 30m 15s',
-      endDate: 'September 16, 2024 12:00 am'
-    },
-    bidders: [
-      { name: 'Purina', amount: 150, time: 'September 9, 2024 6:04 pm' },
-      { name: 'Kazuha', amount: 140, time: 'September 9, 2024 7:57 am' }
-    ]
+  const { koiId } = useParams<{ koiId: string }>()
+  const [fishDetails, setFishDetails] = useState<FishDetails | undefined>()
+  const [auctionInfo, setAuctionInfo] = useState<AuctionInfo | undefined>()
+  const [bidders, setBidders] = useState<Bidder[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const calculateTimeLeft = (endTime: string, startTime: string) => {
+    const end = new Date(endTime).getTime()
+    const start = new Date(startTime).getTime()
+    const now = Date.now()
+    const timeRemaining = end - Math.max(start, now)
+
+    if (timeRemaining <= 0) return 'Auction Ended'
+
+    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24))
+    const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60))
+    const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000)
+
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`
+  }
+
+  const fetchData = async () => {
+    try {
+      const response = await http.get<{
+        message: string
+        value: {
+          // Đây là dữ liệu bạn nhận được từ backend
+          id: string
+          name: string
+          sex: number
+          size: number
+          age: number
+          location: string
+          variety: number
+          reservePrice: number
+          description: string
+          imageUrl: string
+          auctionRequestStatus: number
+          auctionStatus: number
+          startTime: string
+          endTime: string
+          allowAutoBid: boolean
+          auctionMethodName: string
+          breederName: string
+          contact: string
+          bidders: Bidder[]
+        }
+      }>(`Koi/get-active-auction-by-koi-id/${koiId}`)
+
+      const {
+        name,
+        variety,
+        imageUrl,
+        location,
+        size,
+        breederName,
+        age,
+        description,
+        contact,
+        reservePrice,
+        startTime,
+        auctionMethodName,
+        endTime,
+        bidders
+      } = response.data.value
+
+      setFishDetails({
+        name,
+        variety: String(variety),
+        imageUrl,
+        location,
+        size: String(size),
+        breeder: breederName,
+        age: String(age),
+        description,
+        contact
+      })
+      setAuctionInfo({
+        reservePrice,
+        startingBid: reservePrice,
+        timeLeft: calculateTimeLeft(endTime, startTime),
+        startTime,
+        endTime
+      })
+      console.log(auctionMethodName)
+      setBidders(bidders)
+    } catch (error) {
+      console.error('Error fetching auction data:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (koiId) {
+      fetchData()
+    }
+  }, [koiId])
+
+  if (isLoading) {
+    return <p>Loading...</p>
   }
   return (
     <div>
-      <AuctionPage
-        fishDetails={auctionData.fishDetails}
-        auctionInfo={auctionData.auctionInfo}
-        bidders={auctionData.bidders}
-      />
+      <AuctionPage fishDetails={fishDetails} auctionInfo={auctionInfo} bidders={bidders} />
     </div>
   )
 }
