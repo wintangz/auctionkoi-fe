@@ -197,7 +197,7 @@ export default function AdminAccountManagement() {
                       </div>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{user.email}</td>
-                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{user.phone}</td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{user.phoneNumber}</td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-blue'>
                       <span
                         className={`px-2 inline-flex text-xs leading-5 rounded-full ${user.gender === 'Male' ? 'bg-blue text-white' : 'bg-pink-100 text-pink-800'}`}
