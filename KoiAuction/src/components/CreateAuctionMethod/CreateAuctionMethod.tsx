@@ -23,8 +23,9 @@ function CreateAuctionMethod({ description, onSubmit, imfUrl, auctionMethodID }:
   const [location, setLocation] = useState('')
   const [startTime, setStartTime] = useState('')
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [varieties, setVarieties] = useState([])
-  const [variety, setVariety] = useState(varieties[0] || '')
+  const [varieties, setVarieties] = useState<string[]>([])
+  const [variety, setVariety] = useState<string>('')
+
   const navigate = useNavigate()
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -36,10 +37,9 @@ function CreateAuctionMethod({ description, onSubmit, imfUrl, auctionMethodID }:
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await http.get('Enum/variety') // URL của API
-        setVarieties(response.data) // Lưu dữ liệu vào state
+        const response = await http.get('Enum/variety')
+        setVarieties(response.data)
 
-        // Đặt giá trị variety mặc định sau khi varieties được tải xong
         if (response.data.length > 0) {
           setVariety(response.data[0])
         }

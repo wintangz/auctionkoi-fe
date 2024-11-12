@@ -31,7 +31,7 @@ export default function Register() {
     registerAccountMutation.mutate(body, {
       onSuccess: () => {
         setIsAuthenticated(true)
-
+        toast.warn('Please update your profile first')
         nagivate('/')
       },
       onError: (error) => {
