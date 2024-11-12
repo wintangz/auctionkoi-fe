@@ -45,6 +45,7 @@ class Http {
           const decoded: DecodedToken = jwtDecode(token)
           const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
           localStorage.setItem('roles', role)
+          localStorage.setItem('token', token)
         } else if (url === '/logout') {
           this.accessToken = ''
           clearAccessTokenFromLS()

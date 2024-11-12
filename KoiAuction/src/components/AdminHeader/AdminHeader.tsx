@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppContext } from '../../contexts/app.context'
+import { User } from '../../types/User.type'
 
 const AdminHeader: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { logout } = useContext(AppContext)
   const navigate = useNavigate()
+  const [user, setUser] = useState<User>()
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen)
 
@@ -23,9 +25,31 @@ const AdminHeader: React.FC = () => {
     }
   }, [])
 
-  // if (!admin) {
-  //   return null
-  // }
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        console.log('No token found')
+        return
+      }
+
+      const response = await fetch('https://koiauctionwebapp.azurewebsites.net/api/User/get-current-user', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setUser(data.value)
+      } else {
+        console.log('Failed to fetch user data')
+      }
+    }
+
+    fetchUserData()
+  }, [])
 
   const handleLogout = () => {
     logout()
@@ -68,12 +92,8 @@ const AdminHeader: React.FC = () => {
             aria-expanded={dropdownOpen}
             aria-haspopup='true'
           >
-            <img
-              src='https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/what-are-yall-opinions-about-momo-ayases-charecter-design-v0-wqfr6wvv193c1.webp?alt=media&token=ffeea10c-0885-4922-95b3-c6f355a8cb4b'
-              alt='abc'
-              className='h-8 w-8 rounded-full object-cover'
-            />
-            <span className='hidden sm-md:inline-block'>Nguyen Le Hoang Dung</span>
+            <img src={user?.urlAvatar} alt='abc' className='h-8 w-8 rounded-full object-cover' />
+            <span className='hidden sm-md:inline-block'>{user?.fullName}</span>
             <svg className='h-4 w-4 fill-current' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>
               <path d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' />
             </svg>
@@ -81,8 +101,8 @@ const AdminHeader: React.FC = () => {
           {dropdownOpen && (
             <div className='absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10'>
               <div className='p-4 border-b'>
-                <p className='text-sm font-medium text-gray-900'>Nguyen Le Hoang Dung</p>
-                <p className='text-sm text-gray-500'>manager@manager.com</p>
+                <p className='text-sm font-medium text-gray-900'>{user?.fullName}</p>
+                <p className='text-sm text-gray-500'>{user?.email}</p>
               </div>
               <ul className='py-2'>
                 {menuItems.map((item) => (

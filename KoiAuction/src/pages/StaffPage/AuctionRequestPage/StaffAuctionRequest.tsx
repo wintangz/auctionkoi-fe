@@ -91,13 +91,15 @@ const StaffAuctionRequest = () => {
   const [searchSex, setSearchSex] = useState('')
   const [searchVariety, setSearchVariety] = useState('')
   const [priceRange, setPriceRange] = useState(600)
+  const [statusFilter, setStatusFilter] = useState('')
 
   const filteredKoiList = koiList.filter(
     (koi) =>
       (!searchName || koi.name.toLowerCase().includes(searchName.toLowerCase())) &&
       (!searchSex || koi.sex.toLowerCase() === searchSex.toLowerCase()) &&
       (!searchVariety || koi.variety.toLowerCase() === searchVariety.toLowerCase()) &&
-      koi.reservePrice <= priceRange
+      koi.reservePrice <= priceRange &&
+      (!statusFilter || koi.status === statusFilter)
   )
 
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -160,6 +162,33 @@ const StaffAuctionRequest = () => {
                 className='w-full'
               />
             </div>
+
+            <div className='flex gap-2 mt-4'>
+              <button
+                onClick={() => setStatusFilter('')}
+                className={`px-4 py-2 rounded ${!statusFilter ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+              >
+                All
+              </button>
+              <button
+                onClick={() => setStatusFilter('Pending')}
+                className={`px-4 py-2 rounded ${statusFilter === 'Pending' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+              >
+                Pending
+              </button>
+              <button
+                onClick={() => setStatusFilter('Approved')}
+                className={`px-4 py-2 rounded ${statusFilter === 'Approved' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+              >
+                Approved
+              </button>
+              <button
+                onClick={() => setStatusFilter('Denied')}
+                className={`px-4 py-2 rounded ${statusFilter === 'Denied' ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+              >
+                Denied
+              </button>
+            </div>
           </section>
 
           <div className='mt-20'>
@@ -173,26 +202,35 @@ const StaffAuctionRequest = () => {
                       <img src={koi.image} alt={`${koi.name} Koi fish`} className='w-1/4 h-auto object-cover' />
                       <div className='p-4 space-y-2 flex-1'>
                         <h3 className='text-xl font-bold text-red'>Koi Name: {koi.name}</h3>
-                        <p>Sex: {koi.sex}</p>
-                        <p>Reserve price: ${koi.reservePrice}</p>
-                        <p>Age: {koi.age}</p>
-                        <p>Variety: {koi.variety}</p>
-                        <p>Method: {koi.method}</p>
+                        <p className='text-base text-black'>Sex: {koi.sex}</p>
+                        <p className='text-base text-black'>Reserve price: ${koi.reservePrice}</p>
+                        <p className='text-base text-black'>Age: {koi.age}</p>
+                        <p className='text-base text-black'>Variety: {koi.variety}</p>
+                        <p className='text-base text-red'>Method: {koi.method}</p>
                         <div className='flex justify-end'>
                           <button className='mt-2 bg-red text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300 mr-7'>
                             View
                           </button>
                           {koi.status === 'Pending' ? (
-                            <button className='mt-2 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
+                            <button
+                              className='mt-2 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
+                              disabled
+                            >
                               Pending
                             </button>
                           ) : koi.status === 'Denied' ? (
-                            <button className='mt-2 bg-gray-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
+                            <button
+                              className='mt-2 bg-gray-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
+                              disabled
+                            >
                               Denied
                             </button>
                           ) : koi.status === 'Approved' ? (
-                            <button className='mt-2 bg-green-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
-                              Approve
+                            <button
+                              className='mt-2 bg-green-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
+                              disabled
+                            >
+                              Approved
                             </button>
                           ) : null}
                         </div>
@@ -200,15 +238,12 @@ const StaffAuctionRequest = () => {
                     </div>
                   ))
                 ) : (
-                  <p>No Koi found matching your search criteria.</p>
+                  <p>No Koi matches your search criteria.</p>
                 )}
               </section>
             )}
-
-            {!isLoading && (
-              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-            )}
           </div>
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
       </main>
     </div>

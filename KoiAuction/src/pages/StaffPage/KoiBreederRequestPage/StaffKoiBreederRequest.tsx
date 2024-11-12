@@ -11,7 +11,8 @@ const StaffKoiBreederRequest = () => {
       breeder: 'Yamamoto Taro',
       koiFarmDescription:
         'Specializing in high-quality Showa and Kohaku varieties, renowned for their vibrant colors and patterns.',
-      koiFarmImage: 'https://example.com/images/yamamoto-koi-farm.jpg',
+      koiFarmImage:
+        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/image%2021.png?alt=media&token=8612057d-ecc4-4487-86fb-d8f508a164e2',
       status: 'Pending'
     },
     {
@@ -20,7 +21,8 @@ const StaffKoiBreederRequest = () => {
       koiFarmLocation: 'Kyoto, Japan',
       breeder: 'Nishikigoi Ken',
       koiFarmDescription: 'Famous for breeding champion-grade Koi, offering a wide variety of species.',
-      koiFarmImage: 'https://example.com/images/nishikigoi-farm.jpg',
+      koiFarmImage:
+        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/image%2022.png?alt=media&token=9b64eac2-1f6a-4acf-8098-fd51e884a3a0',
       status: 'Pending'
     },
     {
@@ -30,7 +32,8 @@ const StaffKoiBreederRequest = () => {
       breeder: 'Miyazaki Hiroshi',
       koiFarmDescription:
         'Known for their unique Ogon and Asagi varieties, with meticulous care and breeding practices.',
-      koiFarmImage: 'https://example.com/images/miyazaki-koi-farm.jpg',
+      koiFarmImage:
+        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/image%2021.png?alt=media&token=8612057d-ecc4-4487-86fb-d8f508a164e2',
       status: 'Denied'
     },
     {
@@ -39,7 +42,8 @@ const StaffKoiBreederRequest = () => {
       koiFarmLocation: 'Tokyo, Japan',
       breeder: 'Aoki Kazu',
       koiFarmDescription: 'A prestigious farm focusing on high-quality Utsuri and Shiro Utsuri breeds.',
-      koiFarmImage: 'https://example.com/images/aoki-koi.jpg',
+      koiFarmImage:
+        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/image%2022.png?alt=media&token=9b64eac2-1f6a-4acf-8098-fd51e884a3a0',
       status: 'Approved'
     },
     {
@@ -126,27 +130,36 @@ const StaffKoiBreederRequest = () => {
                       <img
                         src={koi.koiFarmImage}
                         alt={`${koi.koiFarmName} Koi fish`}
-                        className='w-1/4 h-auto object-cover'
+                        className='w-2/5 h-auto object-cover'
                       />
                       <div className='p-4 space-y-2 flex-1'>
                         <h3 className='text-xl font-bold text-red'>Farm Name: {koi.koiFarmName}</h3>
-                        <p>Farm Location: {koi.koiFarmLocation}</p>
-                        <p>Koi Breeder: {koi.breeder}</p>
-                        <p>Description: {koi.koiFarmDescription}</p>
+                        <p className='text-base text-black'>Farm Location: {koi.koiFarmLocation}</p>
+                        <p className='text-base text-black'>Koi Breeder: {koi.breeder}</p>
+                        <p className='text-base text-black'>Description: {koi.koiFarmDescription}</p>
                         <div className='flex justify-end'>
                           <button className='mt-2 bg-red text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300 mr-7'>
                             View
                           </button>
                           {koi.status === 'Pending' ? (
-                            <button className='mt-2 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
+                            <button
+                              className='mt-2 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
+                              disabled
+                            >
                               Pending
                             </button>
                           ) : koi.status === 'Denied' ? (
-                            <button className='mt-2 bg-gray-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
+                            <button
+                              className='mt-2 bg-gray-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
+                              disabled
+                            >
                               Denied
                             </button>
                           ) : koi.status === 'Approved' ? (
-                            <button className='mt-2 bg-green-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
+                            <button
+                              className='mt-2 bg-green-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
+                              disabled
+                            >
                               Approve
                             </button>
                           ) : null}
