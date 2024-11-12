@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Menu, X, User, LogOut, Settings, History, Tractor } from 'lucide-react'
 import { AppContext } from '../../contexts/app.context'
 
-export default function CustomerHeader() {
+export default function KoiBreaderHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const { logout } = useContext(AppContext)
@@ -68,18 +68,18 @@ export default function CustomerHeader() {
                     Auction History
                   </a>
                   <a
-                    href='/register-breeder'
+                    href='/create-auction'
                     className='block px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'
                   >
                     <Tractor className='inline-block w-4 h-4 mr-2' />
-                    Register Breeder
+                    Create Auction
                   </a>
                   <a href='/settings' className='block px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'>
                     <Settings className='inline-block w-4 h-4 mr-2' />
                     Settings
                   </a>
                   <button
-                    onClick={handleLogout} // Use the handleLogout function here
+                    onClick={handleLogout}
                     className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'
                   >
                     <LogOut className='inline-block w-4 h-4 mr-2' />
@@ -127,6 +127,10 @@ export default function CustomerHeader() {
               className='text-gray-700 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium'
             >
               Auction History
+            </Link>
+            <Link to='/create-auction' className='block px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'>
+              <Tractor className='inline-block w-4 h-4 mr-2' />
+              Create Auction
             </Link>
             <Link
               to='/settings'

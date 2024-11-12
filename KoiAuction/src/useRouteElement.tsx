@@ -28,6 +28,7 @@ import StaffLayout from './layouts/StaffLayout/StaffLayout'
 import StaffAuctionRequest from './pages/StaffPage/AuctionRequestPage/StaffAuctionRequest'
 import StaffKoiBreederRequest from './pages/StaffPage/KoiBreederRequestPage/StaffKoiBreederRequest'
 import StaffAuctionRequestDetail from './pages/StaffPage/AuctionRequestDetailPage/StaffAuctionRequestDetail'
+import KoiBreederLayout from './layouts/KoiBreederLayout/KoiBreederLayout'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -50,6 +51,15 @@ function StaffProtectedRoute() {
   const isStaff = role === 'STAFF'
 
   return isAuthenticated && isStaff ? <Outlet /> : <Navigate to='/login' />
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+function KoiBreederProtectedRoute() {
+  const { isAuthenticated } = useContext(AppContext)
+  const role = localStorage.getItem('roles') || ''
+  const isKoiBreeder = role === 'KOIBREEDER'
+
+  return isAuthenticated && isKoiBreeder ? <Outlet /> : <Navigate to='/login' />
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -217,44 +227,50 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/create-auction',
-      element: (
-        <MainLayout>
-          <CreateMethodPage />
-        </MainLayout>
-      )
-    },
-    {
-      path: '/method1',
-      element: (
-        <MainLayout>
-          <Method1Page />
-        </MainLayout>
-      )
-    },
-    {
-      path: '/method2',
-      element: (
-        <MainLayout>
-          <Method2Page />
-        </MainLayout>
-      )
-    },
-    {
-      path: '/method3',
-      element: (
-        <MainLayout>
-          <Method3Page />
-        </MainLayout>
-      )
-    },
-    {
-      path: '/method4',
-      element: (
-        <MainLayout>
-          <Method4Page />
-        </MainLayout>
-      )
+      path: '',
+      element: <KoiBreederProtectedRoute />,
+      children: [
+        {
+          path: '/create-auction',
+          element: (
+            <KoiBreederLayout>
+              <CreateMethodPage />
+            </KoiBreederLayout>
+          )
+        },
+        {
+          path: '/method1',
+          element: (
+            <KoiBreederLayout>
+              <Method1Page />
+            </KoiBreederLayout>
+          )
+        },
+        {
+          path: '/method2',
+          element: (
+            <KoiBreederLayout>
+              <Method2Page />
+            </KoiBreederLayout>
+          )
+        },
+        {
+          path: '/method3',
+          element: (
+            <KoiBreederLayout>
+              <Method3Page />
+            </KoiBreederLayout>
+          )
+        },
+        {
+          path: '/method4',
+          element: (
+            <MainLayout>
+              <Method4Page />
+            </MainLayout>
+          )
+        }
+      ]
     },
     {
       path: '/register-breeder',
