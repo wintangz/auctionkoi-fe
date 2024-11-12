@@ -1,12 +1,13 @@
 export type KoiData = {
-  image: string
+  id: string
+  imageUrl: string
   name: string
-  code: string
+  location: string
   sex: string
   reservePrice: number
   age: number
   variety: string
-  bidTime: string
-  status: string
-  deliveryStatus: string
+  endTime: string
+  auctionStatus: string
+  contact: string
 }

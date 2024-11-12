@@ -1,6 +1,7 @@
 import React from 'react'
 import './index.scss'
 import { KoiData } from '../../types/KoiData.type'
+import { Link } from 'react-router-dom'
 
 interface KoiCardProps {
   koi: KoiData
@@ -9,14 +10,14 @@ interface KoiCardProps {
 const KoiCard: React.FC<KoiCardProps> = ({ koi }) => {
   return (
     <div className='card'>
-      <img src={koi.image} alt='Koi' />
+      <img src={koi.imageUrl} alt='Koi' />
       <div className='card-info'>
         <div className='card-details'>
           <p>
             <strong>Koi Name:</strong> {koi.name}
           </p>
           <p>
-            <strong>Code:</strong> {koi.code}
+            <strong>Location:</strong> {koi.location}
           </p>
           <p>
             <strong>Sex:</strong> {koi.sex}
@@ -31,15 +32,17 @@ const KoiCard: React.FC<KoiCardProps> = ({ koi }) => {
             <strong>Variety:</strong> {koi.variety}
           </p>
           <p>
-            <strong>Bid Time:</strong> {koi.bidTime}
+            <strong>Bid Time:</strong> {koi.endTime}
           </p>
+          <p>Contact: {koi.contact}</p>
         </div>
         <div>
-          <p className='status'>Status: {koi.status}</p>
-          <p className={`delivery ${koi.deliveryStatus === 'Finished' ? 'finished-delivery' : 'delivery'}`}>
-            Delivery: {koi.deliveryStatus}
-          </p>
-          <button className='btn-view'>View</button>
+          <p className='status'>Status: {koi.auctionStatus}</p>
+          {/* <p className={`delivery ${koi.deliveryStatus === 'Finished' ? 'finished-delivery' : 'delivery'}`}> */}
+
+          <button className='btn-view'>
+            <Link to={`/auction-detail/${koi.id}`}>View</Link>
+          </button>
         </div>
       </div>
     </div>

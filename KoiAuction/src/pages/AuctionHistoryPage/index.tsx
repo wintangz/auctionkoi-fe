@@ -1,85 +1,64 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import KoiCard from '../../components/KoiCard'
 import './index.scss'
 import TabNavigation from '../../components/TagNavigation'
 import Pagination from '../../components/Pagination/Pagination'
-
-const koiData = [
-  {
-    image:
-      'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b',
-    name: 'Asagi',
-    code: '#Koi2412',
-    sex: 'Male',
-    reservePrice: 150000,
-    age: 12,
-    variety: 'Doitsu',
-    bidTime: 'September 10, 2024 6:04 pm',
-    status: 'Payment successfully',
-    deliveryStatus: 'On-Going'
-  },
-  {
-    image:
-      'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b',
-    name: 'Sanke',
-    code: '#Koi2413',
-    sex: 'Female',
-    reservePrice: 200000,
-    age: 10,
-    variety: 'Kohaku',
-    bidTime: 'September 12, 2024 5:00 pm',
-    status: 'Payment successfully',
-    deliveryStatus: 'Finished'
-  },
-  {
-    image:
-      'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b',
-    name: 'Showa',
-    code: '#Koi2414',
-    sex: 'Male',
-    reservePrice: 180000,
-    age: 8,
-    variety: 'Showa',
-    bidTime: 'September 15, 2024 4:30 pm',
-    status: 'Payment successfully',
-    deliveryStatus: 'On-Going'
-  },
-  {
-    image:
-      'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b',
-    name: 'Kohaku',
-    code: '#Koi2415',
-    sex: 'Female',
-    reservePrice: 220000,
-    age: 11,
-    variety: 'Kohaku',
-    bidTime: 'September 20, 2024 3:00 pm',
-    status: 'Payment successfully',
-    deliveryStatus: 'Finished'
-  },
-  {
-    image:
-      'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/HomePage%2FKoiFishAuction.png?alt=media&token=6389f149-aea2-4b57-9411-70fd4a3fd32b',
-    name: 'Utsuri',
-    code: '#Koi2416',
-    sex: 'Male',
-    reservePrice: 250000,
-    age: 9,
-    variety: 'Utsuri',
-    bidTime: 'September 22, 2024 2:00 pm',
-    status: 'Payment successfully',
-    deliveryStatus: 'On-Going'
-  }
-]
+import { KoiData } from '../../types/KoiData.type'
+import http from '../../utils/http'
 
 const HistoryAuction: React.FC = () => {
+  const [koiData, setKoiData] = useState<KoiData[]>([])
+
   const [activeItem, setActiveItem] = useState('auctionHistory')
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const itemsPerPage = 4 // Số lượng card mỗi trang
-  const totalPages = Math.ceil(koiData.length / itemsPerPage) // Tổng số trang
-  const [selectedSex, setSelectedSex] = useState<string>('') // Trạng thái cho giới tính
-  const [selectedVariety, setSelectedVariety] = useState<string>('') // Trạng thái cho giống
-  const [sortOrder, setSortOrder] = useState<string>('') // Trạng thái cho sắp xếp
+  const itemsPerPage = 4
+  const totalPages = Math.ceil(koiData.length / itemsPerPage)
+  const [selectedSex, setSelectedSex] = useState<string>('')
+  const [selectedVariety, setSelectedVariety] = useState<string>('')
+  const [sortOrder, setSortOrder] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+  useEffect(() => {
+    const fetchKoiData = async () => {
+      try {
+        // Axios request to get koi data from the API
+        const response = await http.get<{ message: string; value: KoiData[] }>('Bid/user/past-auctions')
+
+        // Check if the request was successful (status 200)
+        if (response.status === 200) {
+          const data = response.data
+
+          // Map through the value array from the response
+          const formattedData = data.value.map((item: KoiData) => ({
+            id: item.id,
+            imageUrl: item.imageUrl,
+            name: item.name,
+            location: item.location,
+            sex: item.sex, // Example of how to format sex
+            reservePrice: item.reservePrice,
+            age: item.age,
+            variety: item.variety.toString(),
+            endTime: item.endTime,
+            auctionStatus: item.auctionStatus.toString(), // Convert status code to string if necessary
+            contact: item.contact
+          }))
+
+          setKoiData(formattedData)
+        } else {
+          // Handle non-200 status code
+          throw new Error('Failed to fetch koi data')
+        }
+      } catch (err: any) {
+        // Handle errors (e.g., network or status code errors)
+        setError(err.message)
+      } finally {
+        // Set loading to false once the request is complete
+        setLoading(false)
+      }
+    }
+
+    fetchKoiData()
+  }, [])
 
   const handleItemClick = (item: string) => {
     setActiveItem(item)
@@ -106,6 +85,8 @@ const HistoryAuction: React.FC = () => {
   const indexOfLastKoi = currentPage * itemsPerPage
   const indexOfFirstKoi = indexOfLastKoi - itemsPerPage
   const currentKois = filteredKois.slice(indexOfFirstKoi, indexOfLastKoi)
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>Error: {error}</div>
 
   return (
     <div className='history'>
