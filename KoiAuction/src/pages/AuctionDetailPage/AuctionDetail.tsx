@@ -32,7 +32,6 @@ function AuctionDetailPage() {
       const response = await http.get<{
         message: string
         value: {
-          // Đây là dữ liệu bạn nhận được từ backend
           id: string
           name: string
           sex: number

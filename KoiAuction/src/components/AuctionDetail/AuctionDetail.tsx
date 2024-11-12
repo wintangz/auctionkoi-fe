@@ -68,7 +68,7 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
           <p>Size: {fishDetails.size}</p>
           <p>Breeder: {fishDetails.breeder}</p>
           <p>Age: {fishDetails.age}</p>
-          <p>Delivery: {fishDetails.description}</p>
+          <p>Description: {fishDetails.description}</p>
           <p>Contact: {fishDetails.contact}</p>
         </div>
 

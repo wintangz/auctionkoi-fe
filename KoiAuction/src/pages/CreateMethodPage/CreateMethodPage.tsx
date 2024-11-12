@@ -3,7 +3,9 @@ import AuctionMethodCard from '../../components/AuctionMethodCard/AuctionMethodC
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import http from '../../utils/http'
+
 type AuctionMethodType = {
+  id: string
   methodTitle: string
   description: string
   imageUrl: string
@@ -19,8 +21,9 @@ function CreateMethodPage() {
       const response = await http.get<{ message: string; value: AuctionMethodType[] }>('AuctionMethod')
       const methodsWithRoutes = response.data.value.map((method, index) => ({
         ...method,
-        route: `/method${index + 1}` // Assign route based on index
+        route: `/method${index + 1}`
       }))
+
       setAuctionMethods(methodsWithRoutes)
     } catch (error) {
       console.error('Error fetching auction methods:', error)
@@ -39,6 +42,7 @@ function CreateMethodPage() {
       <div className='auction-card-container'>
         {auctionMethods.map((method, index) => (
           <AuctionMethodCard
+            id={method.id}
             key={index}
             methodTitle={method.methodTitle}
             description={method.description}

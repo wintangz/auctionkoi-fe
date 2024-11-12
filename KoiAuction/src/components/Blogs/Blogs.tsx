@@ -12,7 +12,7 @@ export default function Blogs() {
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
-        const response = await http.get<{ message: string; value: Blog[] }>('Blog/get-all-Blogs')
+        const response = await http.get<{ message: string; value: Blog[] }>('Blog/Blogs')
         setBlogPosts(response.data.value)
       } catch (error) {
         console.error('Error fetching blog posts:', error)

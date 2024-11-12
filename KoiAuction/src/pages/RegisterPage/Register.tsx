@@ -12,6 +12,7 @@ import { ErrorResponseApi } from '../../types/Utils.type'
 import { useContext } from 'react'
 import { AppContext } from '../../contexts/app.context'
 import Button from '../../components/Button/Button'
+import { toast } from 'react-toastify'
 
 export default function Register() {
   const { setIsAuthenticated } = useContext(AppContext)
@@ -30,6 +31,7 @@ export default function Register() {
     registerAccountMutation.mutate(body, {
       onSuccess: () => {
         setIsAuthenticated(true)
+
         nagivate('/')
       },
       onError: (error) => {
