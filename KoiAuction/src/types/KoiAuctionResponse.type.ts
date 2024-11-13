@@ -1,4 +1,4 @@
-export type KoiAuction = {
+export type KoiAuctionResponse = {
   id: string
   name: string
   sex: string
@@ -6,13 +6,16 @@ export type KoiAuction = {
   age: number
   initialPrice: number
   description: string
-  imageUrl: string
+  mainImageUrl: string
+  imageUrl: string[]
   allowAutoBid: boolean
   startTime: string
   endTime: string
+  dateCreate: string
   requestResponse: string
   variety: string
   auctionRequestStatus: string
   auctionStatus: string
   auctionMethod: string
+  breeder: string
 }

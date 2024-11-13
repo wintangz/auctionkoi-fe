@@ -1,73 +1,35 @@
 import { useEffect, useState } from 'react'
 import Pagination from '../../../components/Pagination/Pagination'
-import { KoiBreeder } from '../../../types/KoiBreeder.type'
 import { Link } from 'react-router-dom'
+import { KoiBreederResponse } from '../../../types/KoiBreederResponse.type'
 
 const StaffKoiBreederRequest = () => {
-  const [breederList, setKoiData] = useState<KoiBreeder[]>([
-    {
-      id: '1',
-      koiFarmName: 'Yamamoto Koi Farm',
-      koiFarmLocation: 'Osaka, Japan',
-      breeder: 'Yamamoto Taro',
-      koiFarmDescription:
-        'Specializing in high-quality Showa and Kohaku varieties, renowned for their vibrant colors and patterns.',
-      koiFarmImage:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/image%2021.png?alt=media&token=8612057d-ecc4-4487-86fb-d8f508a164e2',
-      status: 'Pending'
-    },
-    {
-      id: '2',
-      koiFarmName: 'Nishikigoi Farm',
-      koiFarmLocation: 'Kyoto, Japan',
-      breeder: 'Nishikigoi Ken',
-      koiFarmDescription: 'Famous for breeding champion-grade Koi, offering a wide variety of species.',
-      koiFarmImage:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/image%2022.png?alt=media&token=9b64eac2-1f6a-4acf-8098-fd51e884a3a0',
-      status: 'Pending'
-    },
-    {
-      id: '3',
-      koiFarmName: 'Miyazaki Koi Farm',
-      koiFarmLocation: 'Hiroshima, Japan',
-      breeder: 'Miyazaki Hiroshi',
-      koiFarmDescription:
-        'Known for their unique Ogon and Asagi varieties, with meticulous care and breeding practices.',
-      koiFarmImage:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/image%2021.png?alt=media&token=8612057d-ecc4-4487-86fb-d8f508a164e2',
-      status: 'Denied'
-    },
-    {
-      id: '4',
-      koiFarmName: 'Aoki Koi',
-      koiFarmLocation: 'Tokyo, Japan',
-      breeder: 'Aoki Kazu',
-      koiFarmDescription: 'A prestigious farm focusing on high-quality Utsuri and Shiro Utsuri breeds.',
-      koiFarmImage:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/image%2022.png?alt=media&token=9b64eac2-1f6a-4acf-8098-fd51e884a3a0',
-      status: 'Approved'
-    },
-    {
-      id: '5',
-      koiFarmName: 'Sakai Koi Farm',
-      koiFarmLocation: 'Okayama, Japan',
-      breeder: 'Sakai Shinji',
-      koiFarmDescription:
-        'World-renowned for their exceptional Koi breeding techniques, offering a variety of stunning Koi.',
-      koiFarmImage:
-        'https://firebasestorage.googleapis.com/v0/b/koiaution.appspot.com/o/image%2021.png?alt=media&token=8612057d-ecc4-4487-86fb-d8f508a164e2',
-      status: 'Approved'
-    }
-  ])
+  const [breederList, setBreederData] = useState<KoiBreederResponse[]>([])
   const [isLoading, setLoading] = useState(true)
   const [statusFilter, setStatusFilter] = useState('')
 
   const fetchKoiData = async () => {
     try {
       setLoading(true)
+      const token = localStorage.getItem('token')
+
+      const response = await fetch('https://koiauctionwebapp.azurewebsites.net/api/Request/roles', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token ? `Bearer ${token}` : ''
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch data')
+      }
+      const data = await response.json()
+
+      setBreederData(data.value)
     } catch (error) {
       console.error('Error fetching farm data:', error)
-      setKoiData([])
+      setBreederData([])
     } finally {
       setLoading(false)
     }
@@ -83,8 +45,8 @@ const StaffKoiBreederRequest = () => {
   const filteredKoiList = breederList.filter(
     (breeder) =>
       (!searchFarmName || breeder.koiFarmName.toLowerCase().includes(searchFarmName.toLowerCase())) &&
-      (!searchBreederName || breeder.breeder.toLowerCase().includes(searchBreederName.toLowerCase())) &&
-      (!statusFilter || breeder.status === statusFilter)
+      (!searchBreederName || breeder.breederName.toLowerCase().includes(searchBreederName.toLowerCase())) &&
+      (!statusFilter || breeder.roleRequestStatus === statusFilter)
   )
 
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -151,7 +113,7 @@ const StaffKoiBreederRequest = () => {
 
           <div className='mt-20'>
             {isLoading ? (
-              <p>Loading...</p>
+              <p className='text-base text-red'>Loading...</p>
             ) : (
               <section className='grid gap-10'>
                 {currentKoi.length > 0 ? (
@@ -160,12 +122,12 @@ const StaffKoiBreederRequest = () => {
                       <img
                         src={breeder.koiFarmImage}
                         alt={`${breeder.koiFarmName} Koi fish`}
-                        className='w-2/5 h-auto object-cover'
+                        className='w-1/5 h-auto object-cover'
                       />
                       <div className='p-4 space-y-2 flex-1'>
                         <h3 className='text-xl font-bold text-red'>Farm Name: {breeder.koiFarmName}</h3>
                         <p className='text-base text-black'>Farm Location: {breeder.koiFarmLocation}</p>
-                        <p className='text-base text-black'>Koi Breeder: {breeder.breeder}</p>
+                        <p className='text-base text-black'>Koi Breeder: {breeder.breederName}</p>
                         <p className='text-base text-black'>Description: {breeder.koiFarmDescription}</p>
                         <div className='flex justify-end'>
                           <Link to={`/staff/koibreeder-request-detail/${breeder.id}`}>
@@ -173,21 +135,21 @@ const StaffKoiBreederRequest = () => {
                               View
                             </button>
                           </Link>
-                          {breeder.status === 'Pending' ? (
+                          {breeder.roleRequestStatus === 'Pending' ? (
                             <button
                               className='mt-2 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
                               disabled
                             >
                               Pending
                             </button>
-                          ) : breeder.status === 'Denied' ? (
+                          ) : breeder.roleRequestStatus === 'Denied' ? (
                             <button
                               className='mt-2 bg-gray-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
                               disabled
                             >
                               Denied
                             </button>
-                          ) : breeder.status === 'Approved' ? (
+                          ) : breeder.roleRequestStatus === 'Approved' ? (
                             <button
                               className='mt-2 bg-green-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
                               disabled
@@ -200,7 +162,7 @@ const StaffKoiBreederRequest = () => {
                     </div>
                   ))
                 ) : (
-                  <p>No Koi found matching your search criteria.</p>
+                  <p className='text-base text-red'>No Koi Breeder found matching your search criteria.</p>
                 )}
               </section>
             )}
