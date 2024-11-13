@@ -8,4 +8,5 @@ export interface User {
   phoneNumber: string
   fullName: string
   urlAvatar: string
+  balance: number
 }

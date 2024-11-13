@@ -131,6 +131,9 @@ function Profile() {
           <div className='info-item'>
             <span>Address:</span> <span>{userInfo.address}</span>
           </div>
+          <div className='info-item'>
+            <span>Balance:</span> <span>{userInfo.balance}</span>
+          </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', width: '80%' }}>
             <Button type='primary' danger onClick={showModal}>
