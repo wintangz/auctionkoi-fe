@@ -30,6 +30,7 @@ import StaffKoiBreederRequest from './pages/StaffPage/KoiBreederRequestPage/Staf
 import StaffAuctionRequestDetail from './pages/StaffPage/AuctionRequestDetailPage/StaffAuctionRequestDetail'
 import KoiBreederLayout from './layouts/KoiBreederLayout/KoiBreederLayout'
 import PaymentPage from './pages/PaymentPage/PaymentPage'
+import StaffKoiBreederRequestDetail from './pages/StaffPage/KoiBreederRequestDetailPage/StaffKoiBreederRequestDetail'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -124,7 +125,7 @@ export default function useRouteElement() {
           )
         },
         {
-          path: '/staff/auction-request-detail',
+          path: '/staff/auction-request-detail/:id',
           element: (
             <StaffLayout>
               <StaffAuctionRequestDetail />
@@ -136,6 +137,14 @@ export default function useRouteElement() {
           element: (
             <StaffLayout>
               <StaffKoiBreederRequest />
+            </StaffLayout>
+          )
+        },
+        {
+          path: '/staff/koibreeder-request-detail/:id',
+          element: (
+            <StaffLayout>
+              <StaffKoiBreederRequestDetail />
             </StaffLayout>
           )
         }

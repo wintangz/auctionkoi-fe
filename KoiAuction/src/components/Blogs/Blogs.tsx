@@ -52,13 +52,13 @@ export default function Blogs() {
 
         <main>
           <h2 className='text-xl font-semibold mb-2'>Welcome to our Koi blog</h2>
-          <p className='mb-6' style={{ textAlign: 'justify' }}>
+          <p className='mb-6 text-xl text-black' style={{ textAlign: 'justify' }}>
             Dive into a vibrant online community where creativity and passion flourish. At KoiBlogs, we celebrate the
             art of storytelling, providing a platform for writers, artists, and enthusiasts to share their thoughts,
             experiences, and insights.
           </p>
 
-          <p className='mb-6' style={{ textAlign: 'justify' }}>
+          <p className='mb-6 text-xl text-black' style={{ textAlign: 'justify' }}>
             Explore a diverse range of topics, from lifestyle and travel to technology and personal development. Our
             user-friendly interface and supportive community make it easy to share your unique voice and engage with
             readers. Join us today and let your ideas flow in the tranquil waters of KoiBlogs!
@@ -75,13 +75,13 @@ export default function Blogs() {
                   <img
                     src={post.urlImage}
                     alt={post.title}
-                    className='w-full h-48 object-cover' // Set a fixed height and ensure consistent aspect ratio
+                    className='w-full h-56 object-cover' // Set a fixed height and ensure consistent aspect ratio
                   />
                   <div className='p-4'>
                     <h3 className='text-lg font-semibold mb-2'>{post.title}</h3>
                     <p className='text-sm text-gray-600 mb-2'>{date}</p>
                     <p className='text-sm text-gray-600 mb-2'>{time}</p>
-                    <p className='mb-4'>{post.content}</p>
+                    <p className='mb-4 text-base text-black'>{post.content}</p>
                     <a href='#' className='text-red-600 hover:underline'>
                       Read More »
                     </a>
