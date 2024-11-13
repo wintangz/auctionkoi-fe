@@ -1,59 +1,49 @@
 import React, { useEffect, useState } from 'react'
 import KoiCard from '../../components/KoiCard'
-import './index.scss'
 import TabNavigation from '../../components/TagNavigation'
 import Pagination from '../../components/Pagination/Pagination'
 import { KoiData } from '../../types/KoiData.type'
 import http from '../../utils/http'
 
-const HistoryAuction: React.FC = () => {
+const BreederKoiRequest: React.FC = () => {
   const [koiData, setKoiData] = useState<KoiData[]>([])
-
   const [activeItem, setActiveItem] = useState('auctionHistory')
   const [currentPage, setCurrentPage] = useState<number>(1)
   const itemsPerPage = 4
-  const totalPages = Math.ceil(koiData.length / itemsPerPage)
   const [selectedSex, setSelectedSex] = useState<string>('')
   const [selectedVariety, setSelectedVariety] = useState<string>('')
   const [sortOrder, setSortOrder] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState<string>('')
+
   useEffect(() => {
     const fetchKoiData = async () => {
       try {
-        // Axios request to get koi data from the API
-        const response = await http.get<{ message: string; value: KoiData[] }>('Bid/user/past-auctions')
-
-        // Check if the request was successful (status 200)
+        const response = await http.get<{ message: string; value: KoiData[] }>('Koi/get-all-kois')
         if (response.status === 200) {
           const data = response.data
-
-          // Map through the value array from the response
           const formattedData = data.value.map((item: KoiData) => ({
             id: item.id,
             imageUrl: item.imageUrl,
             name: item.name,
             location: item.location,
-            sex: item.sex, // Example of how to format sex
+            sex: item.sex,
             reservePrice: item.reservePrice,
             age: item.age,
             variety: item.variety.toString(),
             endTime: item.endTime,
-            auctionStatus: item.auctionStatus.toString(), // Convert status code to string if necessary
+            auctionStatus: item.auctionStatus.toString(),
             contact: item.contact,
             auctionRequestStatus: item.auctionRequestStatus.toString()
           }))
-
           setKoiData(formattedData)
         } else {
-          // Handle non-200 status code
           throw new Error('Failed to fetch koi data')
         }
       } catch (err: any) {
-        // Handle errors (e.g., network or status code errors)
         setError(err.message)
       } finally {
-        // Set loading to false once the request is complete
         setLoading(false)
       }
     }
@@ -68,24 +58,21 @@ const HistoryAuction: React.FC = () => {
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber)
   }
-  const [searchTerm, setSearchTerm] = useState<string>('')
+
   const filteredKois = koiData.filter((koi) => {
     const matchesName = koi.name.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesSex = selectedSex ? koi.sex.toLowerCase() === selectedSex.toLowerCase() : true
     const matchesVariety = selectedVariety ? koi.variety.toLowerCase() === selectedVariety.toLowerCase() : true
-    return matchesName && matchesSex && matchesVariety
+    const matchesStatus = koi.auctionRequestStatus === 'Pending'
+    return matchesName && matchesSex && matchesVariety && matchesStatus
   })
-  // const sortedKois = filteredKois.sort((a, b) => {
-  //   if (sortOrder === 'oldest') {
-  //     return new Date(a.bidTime).getTime() - new Date(b.bidTime).getTime()
-  //   }
-  //   return new Date(b.bidTime).getTime() - new Date(a.bidTime).getTime() // Mặc định là sắp xếp mới nhất trước
-  // })
 
-  // Tính toán chỉ số bắt đầu và kết thúc
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredKois.length / itemsPerPage)
   const indexOfLastKoi = currentPage * itemsPerPage
   const indexOfFirstKoi = indexOfLastKoi - itemsPerPage
   const currentKois = filteredKois.slice(indexOfFirstKoi, indexOfLastKoi)
+
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error}</div>
 
@@ -130,4 +117,4 @@ const HistoryAuction: React.FC = () => {
   )
 }
 
-export default HistoryAuction
+export default BreederKoiRequest

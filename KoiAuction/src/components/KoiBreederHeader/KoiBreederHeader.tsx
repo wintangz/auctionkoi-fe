@@ -74,6 +74,13 @@ export default function KoiBreaderHeader() {
                     <Tractor className='inline-block w-4 h-4 mr-2' />
                     Create Auction
                   </a>
+                  <a
+                    href='/breeder-koi-request'
+                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'
+                  >
+                    <Tractor className='inline-block w-4 h-4 mr-2' />
+                    Koi Request
+                  </a>
                   <a href='/settings' className='block px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'>
                     <Settings className='inline-block w-4 h-4 mr-2' />
                     Settings
@@ -131,6 +138,13 @@ export default function KoiBreaderHeader() {
             <Link to='/create-auction' className='block px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'>
               <Tractor className='inline-block w-4 h-4 mr-2' />
               Create Auction
+            </Link>
+            <Link
+              to='/breeder-koi-request'
+              className='block px-4 py-2 text-sm text-gray-700 hover:bg-red hover:text-white'
+            >
+              <Tractor className='inline-block w-4 h-4 mr-2' />
+              Koi Request
             </Link>
             <Link
               to='/settings'

@@ -31,6 +31,7 @@ import StaffAuctionRequestDetail from './pages/StaffPage/AuctionRequestDetailPag
 import KoiBreederLayout from './layouts/KoiBreederLayout/KoiBreederLayout'
 import PaymentPage from './pages/PaymentPage/PaymentPage'
 import StaffKoiBreederRequestDetail from './pages/StaffPage/KoiBreederRequestDetailPage/StaffKoiBreederRequestDetail'
+import BreederKoiRequest from './pages/BreederKoiRequestPage/BreederKoiRequestPage'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -285,6 +286,14 @@ export default function useRouteElement() {
           element: (
             <MainLayout>
               <PaymentPage />
+            </MainLayout>
+          )
+        },
+        {
+          path: '/breeder-koi-request',
+          element: (
+            <MainLayout>
+              <BreederKoiRequest />
             </MainLayout>
           )
         }

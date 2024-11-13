@@ -10,4 +10,5 @@ export type KoiData = {
   endTime: string
   auctionStatus: string
   contact: string
+  auctionRequestStatus: string
 }
