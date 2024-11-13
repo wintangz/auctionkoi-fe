@@ -20,7 +20,7 @@ const path = {
   accountManagement: '/admin/account-management',
   transactionManagement: '/admin/transaction-management',
   auctionRequest: '/staff',
-  auctionRequestDetail: '/staff/auction-request-detail',
+  auctionRequestDetail: '/staff/auction-request-detail/:id',
   koibreederRequest: '/staff/koibreeder-request'
 }
 

@@ -4,80 +4,36 @@ import Pagination from '../../../components/Pagination/Pagination'
 import { Link } from 'react-router-dom'
 
 const StaffAuctionRequest = () => {
-  const [koiList, setKoiData] = useState<KoiAuction[]>([
-    {
-      id: '1',
-      name: 'Sakura Showa',
-      breeder: 'Yamamoto Koi Farm',
-      reservePrice: 300,
-      dateCreated: '2024-10-01',
-      method: 'Live Auction',
-      variety: 'Showa',
-      image: 'https://example.com/images/sakura-showa.jpg',
-      sex: 'Female',
-      status: 'Pending',
-      age: 2
-    },
-    {
-      id: '2',
-      name: 'Golden Ogon',
-      breeder: 'Nishikigoi Farm',
-      reservePrice: 450,
-      dateCreated: '2024-09-28',
-      method: 'Online Auction',
-      variety: 'Ogon',
-      image: 'https://example.com/images/golden-ogon.jpg',
-      sex: 'Male',
-      status: 'Pending',
-      age: 3
-    },
-    {
-      id: '3',
-      name: 'Kohaku Beauty',
-      breeder: 'Miyazaki Koi Farm',
-      reservePrice: 500,
-      dateCreated: '2024-10-05',
-      method: 'Sealed Bid',
-      variety: 'Kohaku',
-      image: 'https://example.com/images/kohaku-beauty.jpg',
-      sex: 'Female',
-      status: 'Approved',
-      age: 1
-    },
-    {
-      id: '4',
-      name: 'Shiro Utsuri Star',
-      breeder: 'Aoki Koi',
-      reservePrice: 320,
-      dateCreated: '2024-09-30',
-      method: 'Live Auction',
-      variety: 'Shiro Utsuri',
-      image: 'https://example.com/images/shiro-utsuri-star.jpg',
-      sex: 'Male',
-      status: 'Pending',
-      age: 4
-    },
-    {
-      id: '5',
-      name: 'Platinum Ogon',
-      breeder: 'Sakai Koi Farm',
-      reservePrice: 600,
-      dateCreated: '2024-10-02',
-      method: 'Online Auction',
-      variety: 'Ogon',
-      image: 'https://example.com/images/platinum-ogon.jpg',
-      sex: 'Female',
-      status: 'Denied',
-      age: 2
-    }
-  ])
+  const [koiList, setKoiData] = useState<KoiAuction[]>([])
   const [isLoading, setLoading] = useState(true)
 
   const fetchKoiData = async () => {
     try {
       setLoading(true)
+
+      const token = localStorage.getItem('token')
+
+      if (!token) {
+        console.error('No authentication token found')
+        return
+      }
+
+      const response = await fetch('https://koiauctionwebapp.azurewebsites.net/api/Request/kois', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch koi data')
+      }
+
+      const data = await response.json()
+      setKoiData(data.value)
     } catch (error) {
-      console.error('Error fetching farm data:', error)
+      console.error('Error fetching koi data:', error)
       setKoiData([])
     } finally {
       setLoading(false)
@@ -94,13 +50,15 @@ const StaffAuctionRequest = () => {
   const [priceRange, setPriceRange] = useState(600)
   const [statusFilter, setStatusFilter] = useState('')
 
+  const varieties = Array.from(new Set(koiList.map((koi) => koi.variety)))
+
   const filteredKoiList = koiList.filter(
     (koi) =>
       (!searchName || koi.name.toLowerCase().includes(searchName.toLowerCase())) &&
       (!searchSex || koi.sex.toLowerCase() === searchSex.toLowerCase()) &&
       (!searchVariety || koi.variety.toLowerCase() === searchVariety.toLowerCase()) &&
-      koi.reservePrice <= priceRange &&
-      (!statusFilter || koi.status === statusFilter)
+      koi.initialPrice <= priceRange &&
+      (!statusFilter || koi.auctionRequestStatus === statusFilter)
   )
 
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -144,8 +102,11 @@ const StaffAuctionRequest = () => {
                 className='w-full px-3 py-2 rounded border border-gray-300'
               >
                 <option value=''>Search by variety</option>
-                <option value='kohaku'>Kohaku</option>
-                <option value='showa'>Showa</option>
+                {varieties.map((variety, index) => (
+                  <option key={index} value={variety}>
+                    {variety}
+                  </option>
+                ))}
               </select>
             </div>
             <div className='mt-4'>
@@ -194,20 +155,20 @@ const StaffAuctionRequest = () => {
 
           <div className='mt-20'>
             {isLoading ? (
-              <p>Loading...</p>
+              <p className='text-base text-red'>Loading...</p>
             ) : (
               <section className='grid md:grid-cols-2 gap-10'>
                 {currentKoi.length > 0 ? (
                   currentKoi.map((koi) => (
                     <div key={koi.id} className='border rounded-lg overflow-hidden shadow-md flex p-5'>
-                      <img src={koi.image} alt={`${koi.name} Koi fish`} className='w-1/4 h-auto object-cover' />
+                      <img src={koi.imageUrl} alt={`${koi.name} Koi fish`} className='w-2/5 h-auto object-cover' />
                       <div className='p-4 space-y-2 flex-1'>
                         <h3 className='text-xl font-bold text-red'>Koi Name: {koi.name}</h3>
                         <p className='text-base text-black'>Sex: {koi.sex}</p>
-                        <p className='text-base text-black'>Reserve price: ${koi.reservePrice}</p>
+                        <p className='text-base text-black'>Reserve price: ${koi.initialPrice}</p>
                         <p className='text-base text-black'>Age: {koi.age}</p>
                         <p className='text-base text-black'>Variety: {koi.variety}</p>
-                        <p className='text-base text-red'>Method: {koi.method}</p>
+                        <p className='text-base text-red'>Method: {koi.auctionMethod}</p>
                         <div className='flex justify-end'>
                           <Link to={`/staff/auction-request-detail/${koi.id}`}>
                             <button className='mt-2 bg-red text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300 mr-7'>
@@ -215,39 +176,44 @@ const StaffAuctionRequest = () => {
                             </button>
                           </Link>
 
-                          {koi.status === 'Pending' ? (
+                          {koi.auctionRequestStatus === 'Pending' ? (
                             <button
                               className='mt-2 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
                               disabled
                             >
                               Pending
                             </button>
-                          ) : koi.status === 'Denied' ? (
+                          ) : koi.auctionRequestStatus === 'Denied' ? (
                             <button
                               className='mt-2 bg-gray-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
                               disabled
                             >
                               Denied
                             </button>
-                          ) : koi.status === 'Approved' ? (
+                          ) : koi.auctionRequestStatus === 'Approved' ? (
                             <button
                               className='mt-2 bg-green-700 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
                               disabled
                             >
                               Approved
                             </button>
-                          ) : null}
+                          ) : (
+                            <></>
+                          )}
                         </div>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <p>No Koi matches your search criteria.</p>
+                  <p className='text-base text-red'>No Koi fish found for this filter.</p>
                 )}
               </section>
             )}
+
+            {totalPages > 1 && (
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+            )}
           </div>
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
       </main>
     </div>
