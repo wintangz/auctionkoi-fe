@@ -1,10 +1,9 @@
 import './PaymentPage.scss'
+
 function PaymentPage() {
   return (
     <div className='payment-page-container'>
       <div className='payment-page'>
-        {/* <div className='breadcrumb'>Home &gt;&gt; Auction &gt;&gt; Asagi #Koi2412 &gt;&gt; Payment</div> */}
-
         <h2>Check your Koi Payment</h2>
 
         <div className='info-container'>
@@ -35,7 +34,7 @@ function PaymentPage() {
 
         <h2>Payment</h2>
 
-        <div className='payment-form'>
+        <div className='payment-form-container'>
           <div className='card-logo'>
             <img
               src='https://upload.wikimedia.org/wikipedia/commons/a/a4/Mastercard_2019_logo.svg'
@@ -45,7 +44,7 @@ function PaymentPage() {
             <img src='https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg' alt='Visa' className='card-icon' />
           </div>
 
-          <form>
+          <form className='payment-form'>
             <label htmlFor='name'>Name on Card</label>
             <input type='text' id='name' name='name' required />
 
@@ -55,7 +54,7 @@ function PaymentPage() {
             <label htmlFor='address'>Address</label>
             <input type='text' id='address' name='address' required />
 
-            <div className='security-info'>
+            <div className='payment-security-info'>
               <div>
                 <label htmlFor='cvc'>CVC</label>
                 <input type='text' id='cvc' name='cvc' required />
