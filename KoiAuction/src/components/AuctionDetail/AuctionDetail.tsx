@@ -8,6 +8,7 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
   const [bidAmount, setBidAmount] = useState<number>(auctionInfo?.highestPrice ?? auctionInfo?.startingBid ?? 0)
   const [timeLeft, setTimeLeft] = useState<string>('')
   const [selectedImage, setSelectedImage] = useState<string>(fishDetails?.imageUrl || '')
+  const [isSealedBid, setIsSealedBid] = useState<boolean>(false) // State để lưu kết quả check
 
   const handleBidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBidAmount(Number(e.target.value))
@@ -55,18 +56,36 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
 
     return `${days}d ${hours}h ${minutes}m ${seconds}s`
   }, [])
+
   useEffect(() => {
     if (auctionInfo?.endTime && auctionInfo?.startTime) {
       const updateTimer = () => {
         setTimeLeft(calculateTimeLeft(auctionInfo.endTime, auctionInfo.startTime))
       }
 
-      updateTimer() // Cập nhật lần đầu
+      updateTimer()
       const timer = setInterval(updateTimer, 1000)
 
       return () => clearInterval(timer)
     }
   }, [auctionInfo, calculateTimeLeft])
+
+  // Gọi API kiểm tra sealed-bid khi component mount
+  useEffect(() => {
+    const checkSealedBid = async () => {
+      try {
+        const response = await http.get(`AuctionMethod/check-sealed-bid/${fishDetails?.koiId}`)
+        setIsSealedBid(response.data === true)
+      } catch (error) {
+        console.error('Error checking sealed bid:', error)
+      }
+    }
+
+    if (fishDetails?.koiId) {
+      checkSealedBid()
+    }
+  }, [fishDetails?.koiId])
+
   if (!fishDetails || !auctionInfo || !bidders) {
     return <p>Loading auction details...</p>
   }
@@ -116,39 +135,36 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
           <p>
             Auction ends:{' '}
             <span>
-              {' '}
               {auctionInfo.endTime.split('T')[0]} {auctionInfo.endTime.split('T')[1].split('.')[0]}
             </span>
           </p>
         </div>
 
-        <div className='bidder-list'>
-          <table>
-            <thead>
-              <tr
-                style={{
-                  background: '#d6d1d1'
-                }}
-              >
-                <th>Bidder</th>
-                <th>Amount</th>
-                <th>Bid Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bidders.map((bidder, index) => (
-                <tr key={index}>
-                  <td>{bidder.bidderName}</td>
-                  <td>${bidder.bidAmount}</td>
-                  <td>
-                    {' '}
-                    {bidder.bidTime.split('T')[0]} {bidder.bidTime.split('T')[1].split('.')[0]}
-                  </td>
+        {/* Hiển thị bidder-list nếu không phải là sealed-bid */}
+        {!isSealedBid && (
+          <div className='bidder-list'>
+            <table>
+              <thead>
+                <tr style={{ background: '#d6d1d1' }}>
+                  <th>Bidder</th>
+                  <th>Amount</th>
+                  <th>Bid Time</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {bidders.map((bidder, index) => (
+                  <tr key={index}>
+                    <td>{bidder.bidderName}</td>
+                    <td>${bidder.bidAmount}</td>
+                    <td>
+                      {bidder.bidTime.split('T')[0]} {bidder.bidTime.split('T')[1].split('.')[0]}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         <div className='bid-section'>
           <label>Your bid:</label>

@@ -154,7 +154,7 @@ export default function Auction() {
                 {currentKoi.length > 0 ? (
                   currentKoi.map((koi) => (
                     <div key={koi.id} className='border rounded-lg overflow-hidden shadow-md flex p-5'>
-                      <img src={koi.imageUrl} alt={`${koi.name} Koi fish`} className='w-2/5 h-auto object-cover' />
+                      <img src={koi.imageUrl} alt={`${koi.name} Koi fish`} className='w-1/4 h-auto object-cover' />
                       <div className='p-4 space-y-2 flex-1'>
                         <p className='text-red font-medium text-xl'>
                           Time Left: {timeLeft[koi.id] || 'Calculating...'}
