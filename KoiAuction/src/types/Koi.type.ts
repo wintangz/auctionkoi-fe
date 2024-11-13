@@ -3,7 +3,7 @@ export type Koi = {
   name: string
   size: string
   sex: string
-  initialPrice: string
+  reservePrice: string
   age: number
   variety: string
   timeLeft: string

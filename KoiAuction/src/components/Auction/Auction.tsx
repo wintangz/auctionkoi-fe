@@ -147,7 +147,7 @@ export default function Auction() {
                         <h3 className='text-xl font-bold'>Koi Name: {koi.name}</h3>
                         <p>Size: {koi.size}</p>
                         <p>Sex: {koi.sex}</p>
-                        <p>Reserve price: {koi.initialPrice}</p>
+                        <p>Reserve price: ${koi.reservePrice}</p>
                         <p>Age: {koi.age}</p>
                         <p>Variety: {koi.variety}</p>
 

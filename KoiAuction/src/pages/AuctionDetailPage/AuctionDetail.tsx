@@ -51,6 +51,8 @@ function AuctionDetailPage() {
           breederName: string
           contact: string
           bidders: Bidder[]
+          koiImages: { url: string }[]
+          highestPrice: number
         }
       }>(`Koi/get-active-auction-by-koi-id/${koiId}`)
 
@@ -68,10 +70,13 @@ function AuctionDetailPage() {
         startTime,
         auctionMethodName,
         endTime,
-        bidders
+        bidders,
+        koiImages,
+        highestPrice
       } = response.data.value
 
       setFishDetails({
+        koiId: String(koiId),
         name,
         variety: String(variety),
         imageUrl,
@@ -80,16 +85,19 @@ function AuctionDetailPage() {
         breeder: breederName,
         age: String(age),
         description,
-        contact
+        contact,
+        thumbnails: koiImages?.map((image) => image.url)
       })
       setAuctionInfo({
         reservePrice,
         startingBid: reservePrice,
         timeLeft: calculateTimeLeft(endTime, startTime),
         startTime,
-        endTime
+        endTime,
+        highestPrice,
+        auctionMethodName
       })
-      console.log(auctionMethodName)
+
       setBidders(bidders)
     } catch (error) {
       console.error('Error fetching auction data:', error)

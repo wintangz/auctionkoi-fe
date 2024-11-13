@@ -1,16 +1,43 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import './AuctionDetail.scss'
 import { AuctionPageProps } from '../../types/AuctionDetailProps'
+import http from '../../utils/http'
+import { toast } from 'react-toastify'
 
 const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bidders }) => {
-  const [bidAmount, setBidAmount] = useState<number>(auctionInfo?.startingBid ?? 0)
+  const [bidAmount, setBidAmount] = useState<number>(auctionInfo?.highestPrice ?? auctionInfo?.startingBid ?? 0)
   const [timeLeft, setTimeLeft] = useState<string>('')
+  const [selectedImage, setSelectedImage] = useState<string>(fishDetails?.imageUrl || '')
+
   const handleBidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBidAmount(Number(e.target.value))
   }
+  const placeBid = async () => {
+    const requestBody = {
+      koiId: fishDetails?.koiId,
+      bidAmount: bidAmount
+    }
 
-  const placeBid = () => {
-    console.log('Bid placed: ', bidAmount)
+    try {
+      const response = await http.post('Bid/place-bid', requestBody)
+
+      if (response?.data?.message) {
+        toast.success(response.data.message)
+        window.location.reload()
+      }
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        const { title, detail } = error.response.data
+        if (title && detail) {
+          const errorMessage = `${title}: ${detail}`
+          alert(errorMessage)
+        } else {
+          toast.error(error.response.data.detail)
+        }
+      } else {
+        console.error('Unexpected error: ', error)
+      }
+    }
   }
 
   const calculateTimeLeft = useCallback((endTime: string, startTime: string) => {
@@ -47,12 +74,18 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
   return (
     <div className='auction-page'>
       <div className='main-image-section'>
-        <img src={fishDetails.imageUrl} alt={fishDetails.name} className='main-fish-image' />
-        {/* <div className='thumbnail-section'>
-          {fishDetails.thumbnails.map((thumb, index) => (
-            <img key={index} src={thumb} alt={`Thumbnail ${index + 1}`} className='thumbnail' />
-          ))}
-        </div> */}
+        <img src={selectedImage} alt={fishDetails.name} className='main-fish-image' />
+        <div className='thumbnail-section'>
+          {fishDetails.thumbnails?.map((thumb, index) => (
+            <img
+              key={index}
+              src={thumb}
+              alt={`Thumbnail ${index + 1}`}
+              className='thumbnail'
+              onClick={() => setSelectedImage(thumb)}
+            />
+          )) ?? <p>No thumbnails available</p>}
+        </div>
       </div>
 
       <div className='details-section'>
@@ -61,6 +94,9 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
           Reserve Price: <span>${auctionInfo.reservePrice}</span>
         </h3>
         <h3>Variety: {fishDetails.variety}</h3>
+        <h3 className='reserve-price'>
+          Highest Bid: <span>${auctionInfo.highestPrice} </span>
+        </h3>
 
         <div className='additional-info'>
           <h4>Additional Information</h4>
@@ -69,6 +105,7 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
           <p>Breeder: {fishDetails.breeder}</p>
           <p>Age: {fishDetails.age}</p>
           <p>Description: {fishDetails.description}</p>
+          <p>Auction Method: {auctionInfo.auctionMethodName}</p>
           <p>Contact: {fishDetails.contact}</p>
         </div>
 
@@ -86,7 +123,6 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
         </div>
 
         <div className='bidder-list'>
-          <h4>Bidder</h4>
           <table>
             <thead>
               <tr

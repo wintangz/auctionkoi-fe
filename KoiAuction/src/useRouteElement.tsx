@@ -29,6 +29,7 @@ import StaffAuctionRequest from './pages/StaffPage/AuctionRequestPage/StaffAucti
 import StaffKoiBreederRequest from './pages/StaffPage/KoiBreederRequestPage/StaffKoiBreederRequest'
 import StaffAuctionRequestDetail from './pages/StaffPage/AuctionRequestDetailPage/StaffAuctionRequestDetail'
 import KoiBreederLayout from './layouts/KoiBreederLayout/KoiBreederLayout'
+import PaymentPage from './pages/PaymentPage/PaymentPage'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -267,6 +268,14 @@ export default function useRouteElement() {
           element: (
             <MainLayout>
               <Method4Page />
+            </MainLayout>
+          )
+        },
+        {
+          path: '/payment',
+          element: (
+            <MainLayout>
+              <PaymentPage />
             </MainLayout>
           )
         }

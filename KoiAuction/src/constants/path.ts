@@ -21,7 +21,8 @@ const path = {
   transactionManagement: '/admin/transaction-management',
   auctionRequest: '/staff',
   auctionRequestDetail: '/staff/auction-request-detail',
-  koibreederRequest: '/staff/koibreeder-request'
+  koibreederRequest: '/staff/koibreeder-request',
+  payment: '/payment'
 }
 
 export default path

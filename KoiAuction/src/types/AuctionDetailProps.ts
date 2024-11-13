@@ -1,4 +1,5 @@
 export interface FishDetails {
+  koiId: string
   name: string
   variety: string
   imageUrl: string
@@ -17,6 +18,8 @@ export interface AuctionInfo {
   timeLeft: string
   startTime: string
   endTime: string
+  highestPrice: number
+  auctionMethodName: string
 }
 
 export interface Bidder {
