@@ -110,7 +110,7 @@ export default function AdminAccountManagement() {
       <div className='min-h-screen pb-16 lg:px-0 px-5'>
         <main className='container mx-auto mt-20 p-6 bg-white rounded-lg shadow-lg lg:p-16'>
           <div className='flex flex-col lg:flex-row justify-between mb-6 lg:space-x-4'>
-            <h1 className='text-2xl font-bold text-red mb-6'>QUẢN LÍ TÀI KHOẢN</h1>
+            <h1 className='text-2xl font-bold text-red mb-6'>ACCOUNT MANAGEMENT</h1>
             <div className='flex flex-col md:flex-row justify-between mb-4 space-y-4 md:space-y-0'>
               <div className='relative lg:mr-5 mr-0'>
                 <input

@@ -1,7 +1,6 @@
+import { MonthlyRevenue } from './MonthlyRevenue.type'
+
 export type Revenue = {
-  auctionMethodId: string
-  auctionMethodName: string
-  totalRevenue: number
-  monthlyRevenue: number[]
-  monthlyLabels: string[]
+  totalRevenue: 0
+  monthlyRevenueList: MonthlyRevenue[]
 }
