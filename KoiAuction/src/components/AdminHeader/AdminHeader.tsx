@@ -122,7 +122,7 @@ const AdminHeader: React.FC = () => {
                     className='block px-4 py-2 text-sm text-red hover:bg-gray-100'
                     onClick={handleLogout}
                   >
-                    <div className='flex items-center space-x-2'>
+                    <div className='flex items-center space-x-2 text-red'>
                       <svg
                         className='h-4 w-4'
                         xmlns='http://www.w3.org/2000/svg'

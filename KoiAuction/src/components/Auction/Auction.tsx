@@ -8,11 +8,18 @@ export default function Auction() {
   const [koiList, setKoiData] = useState<Koi[]>([])
   const [isLoading, setLoading] = useState(true)
   const [timeLeft, setTimeLeft] = useState<{ [id: number]: string }>({})
+  const [uniqueVarieties, setUniqueVarieties] = useState<string[]>([])
+
   const fetchKoiData = async () => {
     try {
       setLoading(true)
       const response = await http.get<{ message: string; value: Koi[] }>('Koi/all-active-auctions')
-      setKoiData(response.data.value || [])
+      const koiData = response.data.value || []
+      setKoiData(koiData)
+
+      // Extract unique varieties
+      const varieties = Array.from(new Set(koiData.map((koi) => koi.variety))).sort()
+      setUniqueVarieties(varieties)
     } catch (error) {
       console.error('Error fetching farm data:', error)
       setKoiData([])
@@ -36,9 +43,11 @@ export default function Auction() {
 
     return `${days}d ${hours}h ${minutes}m ${seconds}s`
   }
+
   useEffect(() => {
     fetchKoiData()
   }, [])
+
   useEffect(() => {
     const interval = setInterval(() => {
       const newTimeLeft = koiList.reduce(
@@ -58,6 +67,7 @@ export default function Auction() {
 
     return () => clearInterval(interval)
   }, [koiList])
+
   const [searchName, setSearchName] = useState('')
   const [searchSex, setSearchSex] = useState('')
   const [searchVariety, setSearchVariety] = useState('')
@@ -86,8 +96,8 @@ export default function Auction() {
       <div className='min-h-screen bg-white flex flex-col justify-between'>
         <main className='container mx-auto lg:px-14 lg:py-20 py-0 space-y-12 lg:mt-0 mt-10 px-5'>
           <section className='flex flex-col-reverse md:flex-row md:items-center md:space-x-8 justify-between'>
-            <div className='md:w-3/4 mt-4 md:mt-0 lg:w-1/3'>
-              <p className='text-gray-700'>
+            <div className='md:w-3/4 mt-4 md:mt-0 lg:w-3/5'>
+              <p className='text-gray-700 text-xl'>
                 This website will have a section dedicated to current live auctions, showing active bidding processes
                 with countdown timers and real-time updates. Upcoming auctions are displayed with start times, preview
                 images, and details.
@@ -127,8 +137,11 @@ export default function Auction() {
                 className='w-full px-3 py-2 rounded border border-gray-300'
               >
                 <option value=''>Search by variety</option>
-                <option value='kohaku'>Kohaku</option>
-                <option value='showa'>Showa</option>
+                {uniqueVarieties.map((variety) => (
+                  <option key={variety} value={variety}>
+                    {variety}
+                  </option>
+                ))}
               </select>
             </div>
           </section>
@@ -141,19 +154,23 @@ export default function Auction() {
                 {currentKoi.length > 0 ? (
                   currentKoi.map((koi) => (
                     <div key={koi.id} className='border rounded-lg overflow-hidden shadow-md flex p-5'>
-                      <img src={koi.imageUrl} alt={`${koi.name} Koi fish`} className='w-1/4 h-auto object-cover' />
+                      <img src={koi.imageUrl} alt={`${koi.name} Koi fish`} className='w-2/5 h-auto object-cover' />
                       <div className='p-4 space-y-2 flex-1'>
-                        <p className='text-red font-medium'>Time Left: {timeLeft[koi.id] || 'Calculating...'}</p>
-                        <h3 className='text-xl font-bold'>Koi Name: {koi.name}</h3>
-                        <p>Size: {koi.size}</p>
-                        <p>Sex: {koi.sex}</p>
-                        <p>Reserve price: {koi.initialPrice}</p>
-                        <p>Age: {koi.age}</p>
-                        <p>Variety: {koi.variety}</p>
+                        <p className='text-red font-medium text-xl'>
+                          Time Left: {timeLeft[koi.id] || 'Calculating...'}
+                        </p>
+                        <h3 className='text-base font-bold'>Koi Name: {koi.name}</h3>
+                        <p className='text-base text-black'>Size: {koi.size}</p>
+                        <p className='text-base text-black'>Sex: {koi.sex}</p>
+                        <p className='text-base text-black'>Reserve price: {koi.initialPrice}</p>
+                        <p className='text-base text-black'>Age: {koi.age}</p>
+                        <p className='text-base text-black'>Variety: {koi.variety}</p>
 
-                        <button className='mt-2 bg-red text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
-                          <Link to={`/auction-detail/${koi.id}`}>View</Link>
-                        </button>
+                        <div className='flex justify-end'>
+                          <button className='mt-2 bg-red text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>
+                            <Link to={`/auction-detail/${koi.id}`}>View</Link>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))

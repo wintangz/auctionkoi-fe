@@ -140,7 +140,7 @@ export default function KoiBreaderHeader() {
             </Link>
             <button
               onClick={handleLogout}
-              className='text-gray-700 hover:text-red-600 block px-3 py-2 rounded-md text-base font-medium w-full text-left'
+              className='text-red hover:text-red block px-3 py-2 rounded-md text-base font-medium w-full text-left'
             >
               Logout
             </button>
