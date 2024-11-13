@@ -12,8 +12,7 @@ const AdminHome = () => {
   const [auctionStats, setAuctionStats] = useState<Percentage[]>([])
   const [financialData, setFinancialData] = useState<Revenue>()
   const [loading, setLoading] = useState<boolean>(true)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState<string>('')
+  const [, setError] = useState<string>('')
 
   const [selectedMonth, setSelectedMonth] = useState<number>(5)
   const [selectedYear, setSelectedYear] = useState<number>(2023)
