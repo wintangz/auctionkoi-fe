@@ -6,6 +6,7 @@ import TabNavigation from '../../components/TagNavigation'
 import { User } from '../../types/User.type'
 import http from '../../utils/http'
 import { toast } from 'react-toastify'
+import { Link } from 'react-router-dom'
 
 function Profile() {
   const [activeItem, setActiveItem] = useState('account')
@@ -135,7 +136,10 @@ function Profile() {
             <span>Balance:</span> <span>{userInfo.balance}</span>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', width: '80%' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '80%' }}>
+            <Button type='primary' danger>
+              <Link to={`/transaction/`}>Recharge</Link>
+            </Button>
             <Button type='primary' danger onClick={showModal}>
               Edit Profile
             </Button>

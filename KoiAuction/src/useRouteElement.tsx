@@ -34,6 +34,7 @@ import StaffKoiBreederRequestDetail from './pages/StaffPage/KoiBreederRequestDet
 import BreederKoiRequest from './pages/BreederKoiRequestPage/BreederKoiRequestPage'
 import PaymentSuccessPage from './pages/PaymentPage/PaymentSuccess'
 import PaymentCancelPage from './pages/PaymentPage/PaymentCancel'
+import TransactionPage from './pages/PaymentPage/TransactionPage'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -260,6 +261,14 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <PaymentCancelPage />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/transaction',
+      element: (
+        <MainLayout>
+          <TransactionPage />
         </MainLayout>
       )
     },
