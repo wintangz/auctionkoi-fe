@@ -14,6 +14,8 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
   const [thumbnailIndex, setThumbnailIndex] = useState<number>(0)
   const [currentBidders, setCurrentBidders] = useState<Bidder[]>(bidders || [])
   const [isReady, setIsReady] = useState<boolean>(false)
+  const [hasUserBid, setHasUserBid] = useState<boolean>(false)
+  const [userBid, setUserBid] = useState<Bidder | null>(null)
   const thumbnails = fishDetails?.thumbnails
     ? [fishDetails.imageUrl, ...fishDetails.thumbnails]
     : [fishDetails?.imageUrl || '']
@@ -35,15 +37,10 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
         fetchBidders()
       }
       if (isDescendingBid) {
-        navigate('/') // Điều hướng về trang home
+        navigate('/')
       }
     } catch (error: any) {
-      if (error.response && error.response.data) {
-        const { title, detail } = error.response.data
-        alert(`${title}: ${detail}`)
-      } else {
-        console.error('Unexpected error: ', error)
-      }
+      console.log(error)
     }
   }
 
@@ -63,6 +60,7 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
   const fetchBidders = useCallback(async () => {
     try {
       const response = await http.get(`Koi/get-bidders-by-koi-id/${fishDetails?.koiId}`)
+
       setCurrentBidders(response.data.value[0]?.bidders || [])
     } catch (error) {
       console.error('Error fetching bidders:', error)
@@ -78,6 +76,19 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
     }
   }, [auctionInfo, calculateTimeLeft])
 
+  const checkUserBid = useCallback(async () => {
+    try {
+      const response = await http.get(`Bid/check-userBid-for-koi/${fishDetails?.koiId}`)
+      setHasUserBid(response.data === true)
+      console.log(hasUserBid)
+      if (response.data === true && isSealedBid) {
+        const userBidResponse = await http.get(`Koi/get-current-bidder-by-koi-id/${fishDetails?.koiId}`)
+        setUserBid(userBidResponse.data.value || null)
+      }
+    } catch (error) {
+      console.error('Error checking user bid:', error)
+    }
+  }, [fishDetails?.koiId, isSealedBid])
   useEffect(() => {
     const checkSealedBid = async () => {
       try {
@@ -104,6 +115,9 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
     }
     if (fishDetails?.koiId) checkSealedBid()
   }, [fishDetails?.koiId])
+  useEffect(() => {
+    checkUserBid() // Check if user has bid
+  }, [checkUserBid])
 
   useEffect(() => {
     fetchBidders()
@@ -194,18 +208,35 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
           </p>
         </div>
 
-        {!isSealedBid && (
-          <div className='bidder-list'>
-            <table>
-              <thead>
-                <tr style={{ background: '#d6d1d1' }}>
-                  <th>Bidder</th>
-                  <th>Amount</th>
-                  <th>Bid Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentBidders
+        <div className='bidder-list'>
+          <table>
+            <thead>
+              <tr style={{ background: '#d6d1d1' }}>
+                <th>Bidder</th>
+                <th>Amount</th>
+                <th>Bid Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {isSealedBid ? (
+                // Nếu là sealed bid, chỉ hiển thị bid của người dùng hiện tại (nếu có)
+                hasUserBid ? (
+                  <tr>
+                    <td>{userBid?.bidderName}</td>
+                    <td>${userBid?.bidAmount}</td>
+                    <td>
+                      {userBid?.bidTime.split('T')[0]} {userBid?.bidTime.split('T')[1].split('.')[0]}
+                    </td>
+                  </tr>
+                ) : (
+                  // Nếu người dùng chưa bid, không hiển thị gì cả
+                  <tr>
+                    <td colSpan={3}>You have not placed a bid yet.</td>
+                  </tr>
+                )
+              ) : (
+                // Nếu không phải sealed bid, hiển thị tất cả bid
+                currentBidders
                   .sort((a, b) => b.bidAmount - a.bidAmount)
                   .map((bidder, index) => (
                     <tr key={index}>
@@ -215,11 +246,11 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
                         {bidder.bidTime.split('T')[0]} {bidder.bidTime.split('T')[1].split('.')[0]}
                       </td>
                     </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                  ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
         <div className='bid-section'>
           <label>Your bid:</label>
