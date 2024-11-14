@@ -53,6 +53,7 @@ function AuctionDetailPage() {
           bidders: Bidder[]
           koiImages: { url: string }[]
           highestPrice: number
+          currentDescendedPrice: number
         }
       }>(`Koi/${koiId}`)
 
@@ -72,7 +73,8 @@ function AuctionDetailPage() {
         endTime,
         bidders,
         koiImages,
-        highestPrice
+        highestPrice,
+        currentDescendedPrice
       } = response.data.value
 
       setFishDetails({
@@ -95,7 +97,8 @@ function AuctionDetailPage() {
         startTime,
         endTime,
         highestPrice,
-        auctionMethodName
+        auctionMethodName,
+        currentDescendedPrice
       })
 
       setBidders(bidders)

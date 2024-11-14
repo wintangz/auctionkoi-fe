@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Pagination from '../Pagination/Pagination'
 import { Blog } from '../../types/Blog.type'
 import http from '../../utils/http'
+import { Link } from 'react-router-dom'
 
 export default function Blogs() {
   const [blogPosts, setBlogPosts] = useState<Blog[]>([])
@@ -81,10 +82,10 @@ export default function Blogs() {
                     <h3 className='text-lg font-semibold mb-2'>{post.title}</h3>
                     <p className='text-sm text-gray-600 mb-2'>{date}</p>
                     <p className='text-sm text-gray-600 mb-2'>{time}</p>
-                    <p className='mb-4 text-base text-black'>{post.content}</p>
-                    <a href='#' className='text-red-600 hover:underline'>
-                      Read More »
-                    </a>
+                    <p className='mb-4 text-base text-black line-clamp-3'>{post.content}</p>
+                    <Link to={`/blog-detail/${post.id}`} className='text-red-600 hover:underline'>
+                      Read more...
+                    </Link>
                   </div>
                 </article>
               )

@@ -35,6 +35,7 @@ import BreederKoiRequest from './pages/BreederKoiRequestPage/BreederKoiRequestPa
 import PaymentSuccessPage from './pages/PaymentPage/PaymentSuccess'
 import PaymentCancelPage from './pages/PaymentPage/PaymentCancel'
 import TransactionPage from './pages/PaymentPage/TransactionPage'
+import BlogDetail from './components/Blogs/BlogDetail'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -189,6 +190,14 @@ export default function useRouteElement() {
       element: (
         <MainLayout>
           <Blogs />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/blog-detail/:id',
+      element: (
+        <MainLayout>
+          <BlogDetail />
         </MainLayout>
       )
     },

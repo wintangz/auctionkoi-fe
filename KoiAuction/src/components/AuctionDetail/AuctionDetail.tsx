@@ -3,18 +3,21 @@ import './AuctionDetail.scss'
 import { AuctionPageProps, Bidder } from '../../types/AuctionDetailProps'
 import http from '../../utils/http'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bidders }) => {
   const [bidAmount, setBidAmount] = useState<number>(auctionInfo?.highestPrice ?? auctionInfo?.startingBid ?? 0)
   const [timeLeft, setTimeLeft] = useState<string>('')
   const [selectedThumbnail, setSelectedThumbnail] = useState(fishDetails?.imageUrl)
   const [isSealedBid, setIsSealedBid] = useState<boolean>(false)
-  const [thumbnailIndex, setThumbnailIndex] = useState<number>(0) // Starting index for thumbnail navigation
-  const [currentBidders, setCurrentBidders] = useState<Bidder[]>(bidders || []) // State for reloading bidder list
+  const [isDescendingBid, setIsDescendingBid] = useState<boolean>(false)
+  const [thumbnailIndex, setThumbnailIndex] = useState<number>(0)
+  const [currentBidders, setCurrentBidders] = useState<Bidder[]>(bidders || [])
+  const [isReady, setIsReady] = useState<boolean>(false)
   const thumbnails = fishDetails?.thumbnails
     ? [fishDetails.imageUrl, ...fishDetails.thumbnails]
     : [fishDetails?.imageUrl || '']
-
+  const navigate = useNavigate()
   const handleBidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBidAmount(Number(e.target.value))
   }
@@ -29,7 +32,10 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
       const response = await http.post('Bid/place-bid', requestBody)
       if (response?.data?.message) {
         toast.success(response.data.message)
-        window.location.reload()
+        fetchBidders()
+      }
+      if (isDescendingBid) {
+        navigate('/') // Điều hướng về trang home
       }
     } catch (error: any) {
       if (error.response && error.response.data) {
@@ -79,6 +85,21 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
         setIsSealedBid(response.data === true)
       } catch (error) {
         console.error('Error checking sealed bid:', error)
+      } finally {
+        setIsReady(true)
+      }
+    }
+    if (fishDetails?.koiId) checkSealedBid()
+  }, [fishDetails?.koiId])
+
+  useEffect(() => {
+    const checkSealedBid = async () => {
+      try {
+        const response = await http.get(`AuctionMethod/check-descending-bid/${fishDetails?.koiId}`)
+        setIsDescendingBid(response.data === true)
+        setBidAmount(auctionInfo?.currentDescendedPrice ?? 0)
+      } catch (error) {
+        console.error('Error checking sealed bid:', error)
       }
     }
     if (fishDetails?.koiId) checkSealedBid()
@@ -106,7 +127,7 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
     setSelectedThumbnail(imageUrl)
   }
 
-  if (!fishDetails || !auctionInfo || !bidders) return <p>Loading auction details...</p>
+  if (!fishDetails || !auctionInfo || !bidders || !isReady) return <p>Loading auction details...</p>
 
   return (
     <div className='auction-page'>
@@ -146,10 +167,10 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
         <h3>Variety: {fishDetails.variety}</h3>
         {!isSealedBid && (
           <h3 className='reserve-price'>
-            Highest Bid: <span>${auctionInfo.highestPrice} </span>
+            {isDescendingBid ? 'Current Descended Price: ' : 'Highest Bid: '}
+            <span>${isDescendingBid ? auctionInfo.currentDescendedPrice : auctionInfo.highestPrice}</span>
           </h3>
         )}
-
         <div className='additional-info'>
           <h4>Additional Information</h4>
           <p>Location: {fishDetails.location}</p>
@@ -202,7 +223,13 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
 
         <div className='bid-section'>
           <label>Your bid:</label>
-          <input type='number' value={bidAmount} onChange={handleBidChange} />
+          <input
+            type='number'
+            value={bidAmount}
+            onChange={handleBidChange}
+            min={isDescendingBid ? auctionInfo.currentDescendedPrice : auctionInfo.highestPrice}
+            disabled={isDescendingBid}
+          />
           <button onClick={placeBid} className='bid-now-btn'>
             Bid Now
           </button>

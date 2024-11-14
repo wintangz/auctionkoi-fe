@@ -20,6 +20,7 @@ export interface AuctionInfo {
   endTime: string
   highestPrice: number
   auctionMethodName: string
+  currentDescendedPrice: number
 }
 
 export interface Bidder {

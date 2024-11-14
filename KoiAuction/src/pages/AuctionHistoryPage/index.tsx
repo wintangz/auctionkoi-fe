@@ -21,14 +21,13 @@ const HistoryAuction: React.FC = () => {
   useEffect(() => {
     const fetchKoiData = async () => {
       try {
-        // Axios request to get koi data from the API
-        const response = await http.get<{ message: string; value: KoiData[] }>('Bid/user/past-auctions')
+        const response = await http.get<{ message: string; value: KoiData[] }>('Bid/user/past-auctions', {
+          timeout: 30000
+        })
 
-        // Check if the request was successful (status 200)
         if (response.status === 200) {
           const data = response.data
 
-          // Map through the value array from the response
           const formattedData = data.value.map((item: KoiData) => ({
             id: item.id,
             imageUrl: item.imageUrl,
@@ -46,14 +45,11 @@ const HistoryAuction: React.FC = () => {
 
           setKoiData(formattedData)
         } else {
-          // Handle non-200 status code
           throw new Error('Failed to fetch koi data')
         }
       } catch (err: any) {
-        // Handle errors (e.g., network or status code errors)
         setError(err.message)
       } finally {
-        // Set loading to false once the request is complete
         setLoading(false)
       }
     }
@@ -75,14 +71,7 @@ const HistoryAuction: React.FC = () => {
     const matchesVariety = selectedVariety ? koi.variety.toLowerCase() === selectedVariety.toLowerCase() : true
     return matchesName && matchesSex && matchesVariety
   })
-  // const sortedKois = filteredKois.sort((a, b) => {
-  //   if (sortOrder === 'oldest') {
-  //     return new Date(a.bidTime).getTime() - new Date(b.bidTime).getTime()
-  //   }
-  //   return new Date(b.bidTime).getTime() - new Date(a.bidTime).getTime() // Mặc định là sắp xếp mới nhất trước
-  // })
 
-  // Tính toán chỉ số bắt đầu và kết thúc
   const indexOfLastKoi = currentPage * itemsPerPage
   const indexOfFirstKoi = indexOfLastKoi - itemsPerPage
   const currentKois = filteredKois.slice(indexOfFirstKoi, indexOfLastKoi)
