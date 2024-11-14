@@ -54,7 +54,7 @@ function AuctionDetailPage() {
           koiImages: { url: string }[]
           highestPrice: number
         }
-      }>(`Koi/get-active-auction-by-koi-id/${koiId}`)
+      }>(`Koi/${koiId}`)
 
       const {
         name,

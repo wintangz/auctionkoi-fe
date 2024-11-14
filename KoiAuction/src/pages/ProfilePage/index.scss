@@ -1,26 +1,31 @@
 .profile {
-  display: flex; // Sử dụng Flexbox cho toàn bộ phần profile
-  flex-direction: column; // Đặt chiều hướng là cột
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  align-items: center;
-  min-height: 55vh; // Chiều cao của profile
+  min-height: 55vh;
+
   &__top {
     width: 100%;
+    max-width: 1200px; // Giới hạn chiều rộng để không kéo dãn quá mức
     margin: 0 auto;
   }
+
   &__bottom {
     display: flex;
-    justify-content: center; // Đặt tất cả các item ở giữa
+    justify-content: center;
     align-items: center;
     flex: 1;
     width: 80%;
+    max-width: 1200px; // Giới hạn chiều rộng tối đa cho toàn bộ phần dưới
     margin-bottom: 10px;
+
     &__img {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
+      max-width: 50%; // Giới hạn chiều rộng tối đa để không kéo dãn quá nhiều
     }
 
     &__info {
@@ -30,22 +35,24 @@
       align-items: flex-start;
       padding: 20px;
       gap: 20px;
+      max-width: 50%; // Giới hạn chiều rộng tối đa cho phần thông tin
 
       .info-item {
         display: flex;
         justify-content: flex-start;
         width: 100%;
+        
         span {
-          font-size: 20px;
+          font-size: 1.2rem;
 
           &:first-child {
             font-weight: bold;
             margin-right: 10px;
-            flex: 1; // Để span đầu tiên chiếm 1 phần
+            flex: 1;
           }
           &:last-child {
             text-align: left;
-            flex: 5; // Để span thứ hai chiếm 5 phần
+            flex: 3; // Giảm tỉ lệ xuống 3 để cân đối
           }
         }
       }

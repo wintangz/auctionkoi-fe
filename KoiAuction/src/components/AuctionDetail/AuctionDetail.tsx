@@ -1,18 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import './AuctionDetail.scss'
-import { AuctionPageProps } from '../../types/AuctionDetailProps'
+import { AuctionPageProps, Bidder } from '../../types/AuctionDetailProps'
 import http from '../../utils/http'
 import { toast } from 'react-toastify'
 
 const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bidders }) => {
   const [bidAmount, setBidAmount] = useState<number>(auctionInfo?.highestPrice ?? auctionInfo?.startingBid ?? 0)
   const [timeLeft, setTimeLeft] = useState<string>('')
-  const [selectedImage, setSelectedImage] = useState<string>(fishDetails?.imageUrl || '')
-  const [isSealedBid, setIsSealedBid] = useState<boolean>(false) // State để lưu kết quả check
+  const [selectedThumbnail, setSelectedThumbnail] = useState(fishDetails?.imageUrl)
+  const [isSealedBid, setIsSealedBid] = useState<boolean>(false)
+  const [thumbnailIndex, setThumbnailIndex] = useState<number>(0) // Starting index for thumbnail navigation
+  const [currentBidders, setCurrentBidders] = useState<Bidder[]>(bidders || []) // State for reloading bidder list
+  const thumbnails = fishDetails?.thumbnails
+    ? [fishDetails.imageUrl, ...fishDetails.thumbnails]
+    : [fishDetails?.imageUrl || '']
 
   const handleBidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBidAmount(Number(e.target.value))
   }
+
   const placeBid = async () => {
     const requestBody = {
       koiId: fishDetails?.koiId,
@@ -21,7 +27,6 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
 
     try {
       const response = await http.post('Bid/place-bid', requestBody)
-
       if (response?.data?.message) {
         toast.success(response.data.message)
         window.location.reload()
@@ -29,12 +34,7 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
     } catch (error: any) {
       if (error.response && error.response.data) {
         const { title, detail } = error.response.data
-        if (title && detail) {
-          const errorMessage = `${title}: ${detail}`
-          alert(errorMessage)
-        } else {
-          toast.error(error.response.data.detail)
-        }
+        alert(`${title}: ${detail}`)
       } else {
         console.error('Unexpected error: ', error)
       }
@@ -46,31 +46,32 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
     const start = new Date(startTime).getTime()
     const now = Date.now()
     const timeRemaining = end - Math.max(start, now)
-
     if (timeRemaining <= 0) return 'Auction Ended'
-
     const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24))
     const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
     const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60))
     const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000)
-
     return `${days}d ${hours}h ${minutes}m ${seconds}s`
   }, [])
 
+  const fetchBidders = useCallback(async () => {
+    try {
+      const response = await http.get(`Koi/get-bidders-by-koi-id/${fishDetails?.koiId}`)
+      setCurrentBidders(response.data.value[0]?.bidders || [])
+    } catch (error) {
+      console.error('Error fetching bidders:', error)
+    }
+  }, [fishDetails?.koiId])
+
   useEffect(() => {
     if (auctionInfo?.endTime && auctionInfo?.startTime) {
-      const updateTimer = () => {
-        setTimeLeft(calculateTimeLeft(auctionInfo.endTime, auctionInfo.startTime))
-      }
-
+      const updateTimer = () => setTimeLeft(calculateTimeLeft(auctionInfo.endTime, auctionInfo.startTime))
       updateTimer()
       const timer = setInterval(updateTimer, 1000)
-
       return () => clearInterval(timer)
     }
   }, [auctionInfo, calculateTimeLeft])
 
-  // Gọi API kiểm tra sealed-bid khi component mount
   useEffect(() => {
     const checkSealedBid = async () => {
       try {
@@ -80,30 +81,60 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
         console.error('Error checking sealed bid:', error)
       }
     }
-
-    if (fishDetails?.koiId) {
-      checkSealedBid()
-    }
+    if (fishDetails?.koiId) checkSealedBid()
   }, [fishDetails?.koiId])
 
-  if (!fishDetails || !auctionInfo || !bidders) {
-    return <p>Loading auction details...</p>
+  useEffect(() => {
+    fetchBidders()
+    const interval = setInterval(fetchBidders, 5000)
+    return () => clearInterval(interval)
+  }, [fetchBidders])
+
+  const handleNextThumbnail = () => {
+    if (thumbnailIndex < thumbnails.length - 2) {
+      setThumbnailIndex(thumbnailIndex + 2)
+    }
   }
+
+  const handlePrevThumbnail = () => {
+    if (thumbnailIndex > 0) {
+      setThumbnailIndex(thumbnailIndex - 2)
+    }
+  }
+
+  const handleThumbnailClick = (imageUrl: string) => {
+    setSelectedThumbnail(imageUrl)
+  }
+
+  if (!fishDetails || !auctionInfo || !bidders) return <p>Loading auction details...</p>
 
   return (
     <div className='auction-page'>
       <div className='main-image-section'>
-        <img src={selectedImage} alt={fishDetails.name} className='main-fish-image' />
+        <img src={selectedThumbnail} alt='Main Fish' className='main-fish-image' />
+
         <div className='thumbnail-section'>
-          {fishDetails.thumbnails?.map((thumb, index) => (
+          <button onClick={handlePrevThumbnail} disabled={thumbnailIndex === 0} className='thumbnail-nav-btn'>
+            &lt;
+          </button>
+
+          {thumbnails.slice(thumbnailIndex, thumbnailIndex + 2).map((thumb, index) => (
             <img
               key={index}
               src={thumb}
               alt={`Thumbnail ${index + 1}`}
-              className='thumbnail'
-              onClick={() => setSelectedImage(thumb)}
+              className={`thumbnail ${thumb === selectedThumbnail ? 'selected' : ''}`}
+              onClick={() => handleThumbnailClick(thumb)}
             />
-          )) ?? <p>No thumbnails available</p>}
+          ))}
+
+          <button
+            onClick={handleNextThumbnail}
+            disabled={thumbnailIndex >= thumbnails.length - 2}
+            className='thumbnail-nav-btn'
+          >
+            &gt;
+          </button>
         </div>
       </div>
 
@@ -113,9 +144,11 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
           Reserve Price: <span>${auctionInfo.reservePrice}</span>
         </h3>
         <h3>Variety: {fishDetails.variety}</h3>
-        <h3 className='reserve-price'>
-          Highest Bid: <span>${auctionInfo.highestPrice} </span>
-        </h3>
+        {!isSealedBid && (
+          <h3 className='reserve-price'>
+            Highest Bid: <span>${auctionInfo.highestPrice} </span>
+          </h3>
+        )}
 
         <div className='additional-info'>
           <h4>Additional Information</h4>
@@ -140,7 +173,6 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
           </p>
         </div>
 
-        {/* Hiển thị bidder-list nếu không phải là sealed-bid */}
         {!isSealedBid && (
           <div className='bidder-list'>
             <table>
@@ -152,15 +184,17 @@ const AuctionPage: React.FC<AuctionPageProps> = ({ fishDetails, auctionInfo, bid
                 </tr>
               </thead>
               <tbody>
-                {bidders.map((bidder, index) => (
-                  <tr key={index}>
-                    <td>{bidder.bidderName}</td>
-                    <td>${bidder.bidAmount}</td>
-                    <td>
-                      {bidder.bidTime.split('T')[0]} {bidder.bidTime.split('T')[1].split('.')[0]}
-                    </td>
-                  </tr>
-                ))}
+                {currentBidders
+                  .sort((a, b) => b.bidAmount - a.bidAmount)
+                  .map((bidder, index) => (
+                    <tr key={index}>
+                      <td>{bidder.bidderName}</td>
+                      <td>${bidder.bidAmount}</td>
+                      <td>
+                        {bidder.bidTime.split('T')[0]} {bidder.bidTime.split('T')[1].split('.')[0]}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
