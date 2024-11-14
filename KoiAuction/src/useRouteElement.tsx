@@ -32,6 +32,8 @@ import KoiBreederLayout from './layouts/KoiBreederLayout/KoiBreederLayout'
 import PaymentPage from './pages/PaymentPage/PaymentPage'
 import StaffKoiBreederRequestDetail from './pages/StaffPage/KoiBreederRequestDetailPage/StaffKoiBreederRequestDetail'
 import BreederKoiRequest from './pages/BreederKoiRequestPage/BreederKoiRequestPage'
+import PaymentSuccessPage from './pages/PaymentPage/PaymentSuccess'
+import PaymentCancelPage from './pages/PaymentPage/PaymentCancel'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useContext(AppContext)
@@ -238,6 +240,30 @@ export default function useRouteElement() {
       )
     },
     {
+      path: '/payment',
+      element: (
+        <MainLayout>
+          <PaymentPage />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/payment-success',
+      element: (
+        <MainLayout>
+          <PaymentSuccessPage />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/payment-cancel',
+      element: (
+        <MainLayout>
+          <PaymentCancelPage />
+        </MainLayout>
+      )
+    },
+    {
       path: '',
       element: <KoiBreederProtectedRoute />,
       children: [
@@ -281,14 +307,7 @@ export default function useRouteElement() {
             </MainLayout>
           )
         },
-        {
-          path: '/payment',
-          element: (
-            <MainLayout>
-              <PaymentPage />
-            </MainLayout>
-          )
-        },
+
         {
           path: '/breeder-koi-request',
           element: (
