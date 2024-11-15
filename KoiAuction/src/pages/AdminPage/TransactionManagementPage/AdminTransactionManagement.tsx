@@ -103,6 +103,12 @@ export default function AdminTransactionManagement() {
                       scope='col'
                       className='px-6 py-3 text-left text-xs font-medium text-blue uppercase tracking-wider'
                     >
+                      CommissionAmount
+                    </th>
+                    <th
+                      scope='col'
+                      className='px-6 py-3 text-left text-xs font-medium text-blue uppercase tracking-wider'
+                    >
                       BidMethod
                     </th>
                     <th
@@ -142,10 +148,13 @@ export default function AdminTransactionManagement() {
                       <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
                         {transaction.commissionRate}
                       </td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                        {transaction.commissionAmount} $
+                      </td>
                       <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>{transaction.bidMethod}</td>
                       <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>{transaction.koiName}</td>
                       <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>{transaction.bidderEmail}</td>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>{transaction.bidAmount}</td>
+                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>{transaction.bidAmount} $</td>
                       <td className='px-6 py-4 whitespace-nowrap'>
                         <span
                           className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${

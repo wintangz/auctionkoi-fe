@@ -10,4 +10,5 @@ export type Koi = {
   imageUrl: string
   startTime?: string
   endTime?: string
+  auctionMethodName: string
 }

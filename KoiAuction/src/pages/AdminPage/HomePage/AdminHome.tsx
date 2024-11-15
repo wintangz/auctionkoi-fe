@@ -136,7 +136,7 @@ const AdminHome = () => {
                     <div className='flex-grow'>
                       <span className='font-bold'>{stat.auctionMethodName}</span>
                       <span className='block'>
-                        Number of Users: {stat.numberUsers} - {stat.percentage}%
+                        Number of Users: {stat.numberUsers} - {stat.percentage.toFixed(3)}%
                       </span>
                     </div>
                   </div>

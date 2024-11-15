@@ -3,6 +3,7 @@ export type Transaction = {
   transactionDate: string
   paymentMethod: string
   commissionRate: number
+  commissionAmount: number
   bidMethod: string
   koiName: string
   bidderEmail: string
