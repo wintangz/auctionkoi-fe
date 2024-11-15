@@ -6,7 +6,7 @@ import http from '../../utils/http'
 
 type AuctionMethodType = {
   id: string
-  methodTitle: string
+  name: string
   description: string
   imageUrl: string
   route: string
@@ -44,7 +44,7 @@ function CreateMethodPage() {
           <AuctionMethodCard
             id={method.id}
             key={index}
-            methodTitle={method.methodTitle}
+            methodTitle={method.name}
             description={method.description}
             imageUrl='https://img.freepik.com/premium-vector/poster-template-with-koi-fish-concept-watercolor-style_75071-1972.jpg'
             route={method.route}
