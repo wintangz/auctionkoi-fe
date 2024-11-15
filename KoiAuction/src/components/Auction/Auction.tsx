@@ -71,13 +71,21 @@ export default function Auction() {
   const [searchName, setSearchName] = useState('')
   const [searchSex, setSearchSex] = useState('')
   const [searchVariety, setSearchVariety] = useState('')
+  const [minPrice] = useState(0)
+  const [maxPrice, setMaxPrice] = useState(200)
+  const [searchAuctionMethod, setSearchAuctionMethod] = useState('')
 
   const filteredKoiList = koiList.filter(
     (koi) =>
       (!searchName || koi.name.toLowerCase().includes(searchName.toLowerCase())) &&
       (!searchSex || koi.sex.toLowerCase() === searchSex.toLowerCase()) &&
-      (!searchVariety || koi.variety.toLowerCase() === searchVariety.toLowerCase())
+      (!searchVariety || koi.variety.toLowerCase() === searchVariety.toLowerCase()) &&
+      parseFloat(koi.reservePrice) >= minPrice &&
+      parseFloat(koi.reservePrice) <= maxPrice &&
+      (!searchAuctionMethod || koi.auctionMethodName.includes(searchAuctionMethod))
   )
+
+  const auctionMethods = ['Fixed Price Sale', 'Sealed Bid Auction', 'Ascending Bid Auction', 'Descending Bid Auction']
 
   const [currentPage, setCurrentPage] = useState<number>(1)
   const koiPerPage = 4
@@ -114,35 +122,86 @@ export default function Auction() {
 
           <section className='bg-gray-200 p-6 rounded-lg'>
             <h2 className='text-2xl font-semibold mb-4'>Search All Our Available Koi</h2>
-            <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-              <input
-                type='text'
-                placeholder='Search by name'
-                value={searchName}
-                onChange={(e) => setSearchName(e.target.value)}
-                className='w-full px-3 py-2 rounded border border-gray-300'
-              />
-              <select
-                value={searchSex}
-                onChange={(e) => setSearchSex(e.target.value)}
-                className='w-full px-3 py-2 rounded border border-gray-300'
-              >
-                <option value=''>Search by sex</option>
-                <option value='male'>Male</option>
-                <option value='female'>Female</option>
-              </select>
-              <select
-                value={searchVariety}
-                onChange={(e) => setSearchVariety(e.target.value)}
-                className='w-full px-3 py-2 rounded border border-gray-300'
-              >
-                <option value=''>Search by variety</option>
-                {uniqueVarieties.map((variety) => (
-                  <option key={variety} value={variety}>
-                    {variety}
-                  </option>
-                ))}
-              </select>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+              <div>
+                <label htmlFor='name-search' className='block text-sm font-medium text-gray-700 mb-1'>
+                  Search by name
+                </label>
+                <input
+                  id='name-search'
+                  type='text'
+                  placeholder='Search by name'
+                  value={searchName}
+                  onChange={(e) => setSearchName(e.target.value)}
+                  className='w-full px-3 py-2 rounded border border-gray-300'
+                />
+              </div>
+              <div>
+                <label htmlFor='sex-search' className='block text-sm font-medium text-gray-700 mb-1'>
+                  Search by sex
+                </label>
+                <select
+                  id='sex-search'
+                  value={searchSex}
+                  onChange={(e) => setSearchSex(e.target.value)}
+                  className='w-full px-3 py-2 rounded border border-gray-300'
+                >
+                  <option value=''>All</option>
+                  <option value='male'>Male</option>
+                  <option value='female'>Female</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor='variety-search' className='block text-sm font-medium text-gray-700 mb-1'>
+                  Search by variety
+                </label>
+                <select
+                  id='variety-search'
+                  value={searchVariety}
+                  onChange={(e) => setSearchVariety(e.target.value)}
+                  className='w-full px-3 py-2 rounded border border-gray-300'
+                >
+                  <option value=''>All varieties</option>
+                  {uniqueVarieties.map((variety) => (
+                    <option key={variety} value={variety}>
+                      {variety}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor='auction-method-search' className='block text-sm font-medium text-gray-700 mb-1'>
+                  Search by auction method
+                </label>
+                <select
+                  id='auction-method-search'
+                  value={searchAuctionMethod}
+                  onChange={(e) => setSearchAuctionMethod(e.target.value)}
+                  className='w-full px-3 py-2 rounded border border-gray-300'
+                >
+                  <option value=''>All methods</option>
+                  {auctionMethods.map((method) => (
+                    <option key={method} value={method}>
+                      {method}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='col-span-full'>
+                <label htmlFor='price-range' className='block text-sm font-medium text-gray-700 mb-1'>
+                  Price Range: ${minPrice} - ${maxPrice}
+                </label>
+                <input
+                  id='price-range'
+                  type='range'
+                  min='0'
+                  max='1000'
+                  step='100'
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(Number(e.target.value))}
+                  className='w-full'
+                />
+              </div>
             </div>
           </section>
 
@@ -165,6 +224,7 @@ export default function Auction() {
                         <p className='text-base text-black'>Reserve price: {koi.reservePrice}</p>
                         <p className='text-base text-black'>Age: {koi.age}</p>
                         <p className='text-base text-black'>Variety: {koi.variety}</p>
+                        <p className='text-base text-black'>Method: {koi.auctionMethodName}</p>
 
                         <div className='flex justify-end'>
                           <button className='mt-2 bg-red text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'>

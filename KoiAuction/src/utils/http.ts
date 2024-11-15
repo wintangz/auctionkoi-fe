@@ -46,6 +46,7 @@ class Http {
           const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
           localStorage.setItem('roles', role)
           localStorage.setItem('token', token)
+          toast.success(response.data.message)
         } else if (url === '/logout') {
           this.accessToken = ''
           clearAccessTokenFromLS()
@@ -56,7 +57,7 @@ class Http {
         if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any | undefined = error.response?.data
-          const message = data?.message || error.message
+          const message = data?.detail || error.message
           toast.error(message)
         }
         return Promise.reject(error)
